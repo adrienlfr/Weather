@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Meteo</string>
+    <string name="createcity_title">Nouveau nom de ville?</string>
+    <string name="createcity_positive">Créer la ville</string>
+    <string name="createcity_negative">Annuler</string>
+    <string name="createcity_cityhint">Paris, Clermont-Ferrand...</string>
+    <string name="menu_create_city">Créer une ville</string>
+    <string name="createcity_impossible">Impossible de créer la ville</string>
+    <string name="deletecity_title">Voulez-vous vraiment supprimer %1$s?</string>
+    <string name="commun_yes">Oui</string>
+    <string name="commun_no">Non</string>
+    <string name="deletecity_found">%1$s a été supprimé</string>
+    <string name="deletecity_impossible">Impossible de supprimer %1$s</string>
+    <string name="failed_sync_data">Impossible de charger les données</string>
+    
+    <string name="meteo_temperature_value">%1$d°C</string>
+    <string name="meteo_humidity_value">%1$s</string>
+    <string name="meteo_pressure_value">%1$s hPa</string>
+</resources>
