@@ -9,6 +9,6 @@ import retrofit2.http.Path
  */
 interface MeteoService {
 
-    @GET("conditions/q/France/{cityName}.json")
+    @GET("conditions/q/FR/{cityName}.json")
     fun getMeteo(@Path("cityName") cityName: String) : Call<Meteo>
 }

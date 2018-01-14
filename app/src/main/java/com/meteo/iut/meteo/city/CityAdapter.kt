@@ -11,7 +11,10 @@ import com.meteo.iut.meteo.R
 /**
  * Created by adrien on 10/01/2018.
  */
-class CityAdapter(private val villes: List<City>, private val cityListener: CityAdapter.CityItemListener) : RecyclerView.Adapter<CityAdapter.ViewHolder>(), View.OnClickListener {
+class CityAdapter(
+        private val villes: List<City>,
+        private val cityListener: CityAdapter.CityItemListener) : RecyclerView.Adapter<CityAdapter.ViewHolder>(),
+        View.OnClickListener {
 
 
     interface CityItemListener {
@@ -22,7 +25,6 @@ class CityAdapter(private val villes: List<City>, private val cityListener: City
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardView = itemView.findViewById<CardView>(R.id.card_view)!!
         val cityNameView = itemView.findViewById<TextView>(R.id.name)
-        val deleteView = itemView.findViewById<View>(R.id.delete)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -36,8 +38,6 @@ class CityAdapter(private val villes: List<City>, private val cityListener: City
             cardView.tag = ville
             cardView.setOnClickListener(this@CityAdapter)
             cityNameView.text = ville.name
-            deleteView.tag = ville
-            deleteView.setOnClickListener(this@CityAdapter)
         }
     }
 
@@ -46,8 +46,10 @@ class CityAdapter(private val villes: List<City>, private val cityListener: City
     override fun onClick(view: View) {
         when(view.id) {
             R.id.card_view -> cityListener.onCitySelected(view.tag as City)
-            R.id.delete -> cityListener.onCityDeleted(view.tag as City)
         }
     }
 
+    fun getItem(position: Int) : City {
+        return villes[position]
+    }
 }

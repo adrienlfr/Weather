@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Meteo</string>
-    <string name="createcity_title">Nouveau nom de ville?</string>
-    <string name="createcity_positive">Créer la ville</string>
+    <string name="createcity_title">Nom de la ville?</string>
+    <string name="createcity_positive">Ajouter la ville</string>
     <string name="createcity_negative">Annuler</string>
     <string name="createcity_cityhint">Paris, Clermont-Ferrand...</string>
-    <string name="menu_create_city">Créer une ville</string>
+    <string name="menu_create_city">Ajouter une ville</string>
     <string name="createcity_impossible">Impossible de créer la ville</string>
     <string name="deletecity_title">Voulez-vous vraiment supprimer %1$s?</string>
     <string name="commun_yes">Oui</string>

@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Created by adrien on 10/01/2018.
  */
 
-private const val API_KEY = "7ebab482977ab59e"
+private const val API_KEY = "0b7943ce0b8fca43"
 
 class App : Application() {
 
@@ -20,7 +20,10 @@ class App : Application() {
             Database(instance)
         }
 
-        private val retrofit = Retrofit.Builder().baseUrl("http://api.wunderground.com/api/$API_KEY/geolookup/").addConverterFactory(GsonConverterFactory.create()).build()
+        private val retrofit = Retrofit.Builder()
+                .baseUrl("http://api.wunderground.com/api/$API_KEY/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
 
         val meteoService: MeteoService = retrofit.create(MeteoService::class.java)
     }

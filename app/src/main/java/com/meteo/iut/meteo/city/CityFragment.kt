@@ -1,13 +1,16 @@
 package com.meteo.iut.meteo.city
 
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
 import com.meteo.iut.meteo.App
 import com.meteo.iut.meteo.Database
 import com.meteo.iut.meteo.R
+import com.meteo.iut.meteo.utils.SwipeToDeleteCallback
 import com.meteo.iut.meteo.utils.toast
 
 
@@ -25,6 +28,7 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
     private lateinit var villes: MutableList<City>
     private lateinit var database : Database
     private lateinit var recyclerView: RecyclerView
+    private lateinit var floatingButton: FloatingActionButton
     private lateinit var adapter: CityAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +41,19 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
         val view = inflater.inflate(R.layout.fragment_city, container, false)
         recyclerView = view.findViewById(R.id.cities_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
+
+        val swipeHandler = object : SwipeToDeleteCallback(this.context) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val city = adapter.getItem(viewHolder.adapterPosition)
+                showDeleteCityDialog(city)
+            }
+        }
+
+        val touchHelper = ItemTouchHelper(swipeHandler)
+        touchHelper.attachToRecyclerView(recyclerView)
+
+        floatingButton = view.findViewById(R.id.floatingActionButton)
+        floatingButton.setOnClickListener({v -> showCreateCityDialog()})
         return view
     }
 
@@ -50,10 +67,10 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.fragment_city, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
         when (item?.itemId) {
             R.id.action_create_city -> {
                 showCreateCityDialog()
@@ -92,7 +109,9 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
                 deleteCity(city)
             }
 
-            override fun onDialogNegativeClick() { }
+            override fun onDialogNegativeClick() {
+                adapter.notifyDataSetChanged()
+            }
         }
 
 

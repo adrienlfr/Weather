@@ -1,7 +1,9 @@
 package com.meteo.iut.meteo.meteo
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,16 +63,18 @@ class MeteoFragment : Fragment() {
         val call = App.meteoService.getMeteo(cityName)
         call.enqueue(object: Callback<Meteo> {
             override fun onResponse(call: Call<Meteo>?, response: Response<Meteo>?) {
+                Log.i(TAG, "Receive weather data")
                 response?.body()?.currentObservation?.let { updateUi(it) }
             }
-
             override fun onFailure(call: Call<Meteo>?, t: Throwable?) {
+                Log.i(TAG, "Could not load city weather", t)
                 context.toast(getString(R.string.failed_sync_data))
             }
         })
     }
 
     private fun updateUi(currentObservation: CurrentObservation) {
+        context.toast("OK : " + currentObservation.meteo)
         meteoDescription.text = currentObservation.meteo
         temperature.text = getString(R.string.meteo_temperature_value, currentObservation.temperature.toInt())
         humidity.text = getString(R.string.meteo_humidity_value, currentObservation.humidity)

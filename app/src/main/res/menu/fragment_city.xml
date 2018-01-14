@@ -4,8 +4,7 @@
 
     <item
         android:id="@+id/action_create_city"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_add_white_24dp"
+        app:showAsAction="never"
         android:title="@string/menu_create_city" />
 
 </menu>
