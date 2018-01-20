@@ -3,6 +3,7 @@ package com.meteo.iut.meteo.fragment
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.meteo.iut.meteo.R
 import com.meteo.iut.meteo.data.CurrentObservation
 import com.meteo.iut.meteo.data.Weather
 import com.meteo.iut.meteo.utils.toast
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,6 +30,7 @@ class WeatherFragment : Fragment() {
         fun newInstance() = WeatherFragment()
     }
 
+    private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var cityName: String
     private lateinit var city: TextView
     private lateinit var icon: ImageView
@@ -39,12 +42,15 @@ class WeatherFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
 
+        refreshLayout = view.findViewById(R.id.swipe_refresh)
         city = view.findViewById(R.id.city)
         icon = view.findViewById(R.id.weather_icon)
         description = view.findViewById(R.id.weather_description)
         temperature = view.findViewById(R.id.temperature)
         humidity = view.findViewById(R.id.humidity)
         pressure = view.findViewById(R.id.pressure)
+
+        refreshLayout.setOnRefreshListener { updateWeatherForCity(cityName) }
 
         return view
     }
@@ -53,33 +59,52 @@ class WeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (activity?.intent!!.hasExtra(EXTRA_CITY_NAME)) {
-            updateMeteoForCity(activity!!.intent.getStringExtra(EXTRA_CITY_NAME))
+            updateWeatherForCity(activity!!.intent.getStringExtra(EXTRA_CITY_NAME))
         }
     }
 
-    private fun updateMeteoForCity(cityName: String) {
+    fun updateWeatherForCity(cityName: String) {
         this.cityName = cityName
 
         this.city.text = cityName
 
+        if (!refreshLayout.isRefreshing){
+            refreshLayout.isRefreshing = true
+        }
+
         val call = App.WEATHER_SERVICE.getMeteo(cityName)
         call.enqueue(object: Callback<Weather> {
             override fun onResponse(call: Call<Weather>?, response: Response<Weather>?) {
-                Log.i(TAG, "Receive weather data")
                 response?.body()?.currentObservation?.let { updateUi(it) }
+                refreshLayout.isRefreshing = false
             }
             override fun onFailure(call: Call<Weather>?, t: Throwable?) {
-                Log.i(TAG, "Could not load city weather", t)
                 context.toast(getString(R.string.failed_sync_data))
+                refreshLayout.isRefreshing = false
             }
         })
     }
 
-    private fun updateUi(currentObservation: CurrentObservation) {
-        context.toast("OK : " + currentObservation.meteo)
-        description.text = currentObservation.meteo
-        temperature.text = getString(R.string.meteo_temperature_value, currentObservation.temperature.toInt())
-        humidity.text = getString(R.string.meteo_humidity_value, currentObservation.humidity)
-        pressure.text = getString(R.string.meteo_pressure_value, currentObservation.pressure)
+    private fun updateUi(weatherCurrentObservation: CurrentObservation) {
+
+        Picasso.with(context)
+                .load(weatherCurrentObservation.iconUrl)
+                .placeholder(R.drawable.ic_cloud_off_black_24dp)
+                .into(icon)
+
+        description.text = weatherCurrentObservation.weather
+        temperature.text = getString(R.string.meteo_temperature_value, weatherCurrentObservation.temperature.toInt())
+        humidity.text = getString(R.string.meteo_humidity_value, weatherCurrentObservation.humidity)
+        pressure.text = getString(R.string.meteo_pressure_value, weatherCurrentObservation.pressure)
+    }
+
+    fun clearUi() {
+        icon.setImageResource(R.drawable.ic_cloud_off_black_24dp)
+        cityName = ""
+        city.text = ""
+        description.text = ""
+        temperature.text = ""
+        humidity.text = ""
+        pressure.text = ""
     }
 }

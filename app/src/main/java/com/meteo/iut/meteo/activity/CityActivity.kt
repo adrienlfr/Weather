@@ -12,6 +12,8 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
     private lateinit var cityFragment: CityFragment
     private lateinit var currentCity: City
+    private var weatherFragment: WeatherFragment? = null
+    var isTwoPane: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,14 +21,28 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
         cityFragment = supportFragmentManager.findFragmentById(R.id.city_fragment) as CityFragment
         cityFragment.listener = this
+
+        if (!isTwoPane)
+            weatherFragment = supportFragmentManager.findFragmentById(R.id.weather_fragment) as WeatherFragment?
     }
+
 
     override fun onCitySelected(city: City) {
         currentCity = city
-        startMeteoActivity(city)
+        if (isHandsetLayout()) {
+            startWeatherActivity(city)
+        } else {
+            weatherFragment?.updateWeatherForCity(city.name)
+        }
     }
 
-    private fun startMeteoActivity(city: City) {
+    override fun onEmptyCities() {
+        weatherFragment?.clearUi()
+    }
+
+    fun isHandsetLayout(): Boolean = weatherFragment == null
+
+    private fun startWeatherActivity(city: City) {
         val intent = Intent( this, WeatherActivity::class.java)
         intent.putExtra(WeatherFragment.EXTRA_CITY_NAME, city.name)
         startActivity(intent)

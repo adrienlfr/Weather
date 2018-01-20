@@ -10,6 +10,7 @@ import android.view.*
 import com.meteo.iut.meteo.App
 import com.meteo.iut.meteo.Database
 import com.meteo.iut.meteo.R
+import com.meteo.iut.meteo.activity.CityActivity
 import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.adapter.CityAdapter
 import com.meteo.iut.meteo.dialog.CreateCityDialogFragment
@@ -25,6 +26,7 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
 
     interface CityFragmentListener {
         fun onCitySelected(city: City)
+        fun onEmptyCities()
     }
 
     var listener: CityFragmentListener? = null
@@ -93,6 +95,13 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
         showDeleteCityDialog(city)
     }
 
+    fun selectFirstCity(){
+        when (villes.isEmpty()){
+            true -> listener?.onEmptyCities()
+            false -> onCitySelected(villes.first())
+        }
+    }
+
     private fun showCreateCityDialog() {
         val createCityFragment = CreateCityDialogFragment()
         createCityFragment.listener = object : CreateCityDialogFragment.CreateCityDialogListerner {
@@ -136,6 +145,8 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
         if (database.createCity(city)) {
             villes.add(city)
             adapter.notifyDataSetChanged()
+            if ((activity as CityActivity).isTwoPane)
+                selectFirstCity()
         }else{
             context.toast(getString(R.string.createcity_impossible))
         }

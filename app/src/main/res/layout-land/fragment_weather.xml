@@ -51,17 +51,21 @@
 
         <FrameLayout
             android:id="@+id/back_info"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="250dp"
             android:visibility="invisible"
-            app:layout_constraintTop_toBottomOf="@id/weather_icon"
+            android:layout_marginLeft="50dp"
+            android:layout_marginStart="50dp"
+            app:layout_constraintLeft_toRightOf="@+id/weather_description"
+            app:layout_constraintRight_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/city"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/temperature_label"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="@id/weather_icon"
+            app:layout_constraintLeft_toLeftOf="@id/back_info"
             app:layout_constraintTop_toTopOf="@id/back_info"
             app:layout_constraintBottom_toTopOf="@id/humidity_label"
             app:layout_constraintVertical_chainStyle="spread"
