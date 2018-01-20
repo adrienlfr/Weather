@@ -8,12 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="meteoLabel">
+    <style name="weatherLabel">
         <item name="android:textSize">20dp</item>
         <item name="android:textColor">@android:color/secondary_text_light</item>
     </style>
 
-    <style name="meteoData">
+    <style name="weatherData">
         <item name="android:textSize">25dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/primary_text_light</item>

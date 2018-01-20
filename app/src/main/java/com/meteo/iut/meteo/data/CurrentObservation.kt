@@ -1,4 +1,4 @@
-package com.meteo.iut.meteo.meteo
+package com.meteo.iut.meteo.data
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,4 +1,4 @@
-package com.meteo.iut.meteo.city
+package com.meteo.iut.meteo.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog

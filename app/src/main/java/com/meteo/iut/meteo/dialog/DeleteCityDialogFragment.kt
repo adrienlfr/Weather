@@ -1,8 +1,7 @@
-package com.meteo.iut.meteo.city
+package com.meteo.iut.meteo.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import com.meteo.iut.meteo.R

@@ -1,4 +1,4 @@
-package com.meteo.iut.meteo.city
+package com.meteo.iut.meteo.data
 
 /**
  * Created by adrien on 10/01/2018.

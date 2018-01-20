@@ -4,8 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
-import com.meteo.iut.meteo.city.City
+import com.meteo.iut.meteo.data.City
 
 /**
  * Created by adrien on 10/01/2018.

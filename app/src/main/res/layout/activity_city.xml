@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.meteo.iut.meteo.city.CityActivity">
+    tools:context="com.meteo.iut.meteo.activity.CityActivity">
 
     <fragment
         android:id="@+id/city_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.meteo.iut.meteo.city.CityFragment" />
+        android:name="com.meteo.iut.meteo.fragment.CityFragment" />
 
 </LinearLayout>

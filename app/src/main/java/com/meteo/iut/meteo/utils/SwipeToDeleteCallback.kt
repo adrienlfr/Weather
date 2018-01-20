@@ -14,7 +14,7 @@ import com.meteo.iut.meteo.R
  */
 abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_black_24dp)
+    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_sweep_black_24dp)
     private val intrinsicWidth = deleteIcon.intrinsicWidth
     private val intrinsicHeight = deleteIcon.intrinsicHeight
     private val background = ColorDrawable()
@@ -28,9 +28,9 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
         val itemView = viewHolder.itemView
         val itemHeight = itemView.bottom - itemView.top
 
-        background.color = backgroundColor
-        background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-        background.draw(c)
+        // background.color = backgroundColor
+        // background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+        // background.draw(c)
 
         val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
         val deleteIconMargin = (itemHeight - intrinsicHeight) / 2

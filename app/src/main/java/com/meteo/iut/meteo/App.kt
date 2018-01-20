@@ -1,7 +1,7 @@
 package com.meteo.iut.meteo
 
 import android.app.Application
-import com.meteo.iut.meteo.meteo.MeteoService
+import com.meteo.iut.meteo.utils.WeatherService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -25,7 +25,7 @@ class App : Application() {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
-        val meteoService: MeteoService = retrofit.create(MeteoService::class.java)
+        val WEATHER_SERVICE: WeatherService = retrofit.create(WeatherService::class.java)
     }
 
     override fun onCreate() {

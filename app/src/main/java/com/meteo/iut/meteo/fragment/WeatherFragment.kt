@@ -1,4 +1,4 @@
-package com.meteo.iut.meteo.meteo
+package com.meteo.iut.meteo.fragment
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
@@ -11,6 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.meteo.iut.meteo.App
 import com.meteo.iut.meteo.R
+import com.meteo.iut.meteo.data.CurrentObservation
+import com.meteo.iut.meteo.data.Weather
 import com.meteo.iut.meteo.utils.toast
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,27 +21,27 @@ import retrofit2.Response
 /**
  * Created by adrien on 10/01/2018.
  */
-class MeteoFragment : Fragment() {
+class WeatherFragment : Fragment() {
 
     companion object {
         val EXTRA_CITY_NAME = "com.meteo.itu.meteo.extras.EXTRA_CITY_NAME"
-        fun newInstance() = MeteoFragment()
+        fun newInstance() = WeatherFragment()
     }
 
     private lateinit var cityName: String
     private lateinit var city: TextView
-    private lateinit var meteoIcon: ImageView
-    private lateinit var meteoDescription: TextView
+    private lateinit var icon: ImageView
+    private lateinit var description: TextView
     private lateinit var temperature: TextView
     private lateinit var humidity: TextView
     private lateinit var pressure: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_meteo, container, false)
+        val view = inflater.inflate(R.layout.fragment_weather, container, false)
 
         city = view.findViewById(R.id.city)
-        meteoIcon = view.findViewById(R.id.meteo_icon)
-        meteoDescription = view.findViewById(R.id.meteo_description)
+        icon = view.findViewById(R.id.weather_icon)
+        description = view.findViewById(R.id.weather_description)
         temperature = view.findViewById(R.id.temperature)
         humidity = view.findViewById(R.id.humidity)
         pressure = view.findViewById(R.id.pressure)
@@ -60,13 +62,13 @@ class MeteoFragment : Fragment() {
 
         this.city.text = cityName
 
-        val call = App.meteoService.getMeteo(cityName)
-        call.enqueue(object: Callback<Meteo> {
-            override fun onResponse(call: Call<Meteo>?, response: Response<Meteo>?) {
+        val call = App.WEATHER_SERVICE.getMeteo(cityName)
+        call.enqueue(object: Callback<Weather> {
+            override fun onResponse(call: Call<Weather>?, response: Response<Weather>?) {
                 Log.i(TAG, "Receive weather data")
                 response?.body()?.currentObservation?.let { updateUi(it) }
             }
-            override fun onFailure(call: Call<Meteo>?, t: Throwable?) {
+            override fun onFailure(call: Call<Weather>?, t: Throwable?) {
                 Log.i(TAG, "Could not load city weather", t)
                 context.toast(getString(R.string.failed_sync_data))
             }
@@ -75,7 +77,7 @@ class MeteoFragment : Fragment() {
 
     private fun updateUi(currentObservation: CurrentObservation) {
         context.toast("OK : " + currentObservation.meteo)
-        meteoDescription.text = currentObservation.meteo
+        description.text = currentObservation.meteo
         temperature.text = getString(R.string.meteo_temperature_value, currentObservation.temperature.toInt())
         humidity.text = getString(R.string.meteo_humidity_value, currentObservation.humidity)
         pressure.text = getString(R.string.meteo_pressure_value, currentObservation.pressure)

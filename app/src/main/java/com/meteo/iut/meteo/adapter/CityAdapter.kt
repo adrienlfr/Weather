@@ -1,4 +1,4 @@
-package com.meteo.iut.meteo.city
+package com.meteo.iut.meteo.adapter
 
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -7,13 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.meteo.iut.meteo.R
+import com.meteo.iut.meteo.data.City
 
 /**
  * Created by adrien on 10/01/2018.
  */
 class CityAdapter(
         private val villes: List<City>,
-        private val cityListener: CityAdapter.CityItemListener) : RecyclerView.Adapter<CityAdapter.ViewHolder>(),
+        private val cityListener: CityItemListener) : RecyclerView.Adapter<CityAdapter.ViewHolder>(),
         View.OnClickListener {
 
 

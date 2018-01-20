@@ -1,4 +1,4 @@
-package com.meteo.iut.meteo.city
+package com.meteo.iut.meteo.fragment
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -10,6 +10,10 @@ import android.view.*
 import com.meteo.iut.meteo.App
 import com.meteo.iut.meteo.Database
 import com.meteo.iut.meteo.R
+import com.meteo.iut.meteo.data.City
+import com.meteo.iut.meteo.adapter.CityAdapter
+import com.meteo.iut.meteo.dialog.CreateCityDialogFragment
+import com.meteo.iut.meteo.dialog.DeleteCityDialogFragment
 import com.meteo.iut.meteo.utils.SwipeToDeleteCallback
 import com.meteo.iut.meteo.utils.toast
 
@@ -91,7 +95,7 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
 
     private fun showCreateCityDialog() {
         val createCityFragment = CreateCityDialogFragment()
-        createCityFragment.listener = object : CreateCityDialogFragment.CreateCityDialogListerner{
+        createCityFragment.listener = object : CreateCityDialogFragment.CreateCityDialogListerner {
             override fun onDialogPositiveClick(cityName: String) {
                 saveCity(City(cityName))
             }
