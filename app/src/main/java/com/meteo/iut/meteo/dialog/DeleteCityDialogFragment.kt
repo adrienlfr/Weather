@@ -31,6 +31,7 @@ class DeleteCityDialogFragment : DialogFragment() {
         }
     }
 
+    //TODO : Erreur lors de la suppresssion d'une ville, lorsquon clique a coté du dialogue il faut raffraichir la page
     var listener: DeleteCityDialogListener? = null
     private lateinit var cityName: String
 
