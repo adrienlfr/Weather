@@ -10,8 +10,8 @@ import android.provider.BaseColumns
 object CityContract {
 
     val CONTENT_AUTHORITY = "com.meteo.iut.meteo"
-    val BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY)
     val PATH_CITIES = "cities"
+    val BASE_CONTENT_URI : Uri = Uri.parse("content://${CONTENT_AUTHORITY}/${PATH_CITIES}")
 
     abstract class CityEntry : BaseColumns {
         companion object {
@@ -21,7 +21,7 @@ object CityContract {
             val CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CITIES
 
 
-            val CITY_TABLE_NAME = "city"
+            val CITY_TABLE_NAME = "cities"
             val CITY_KEY_ID = "id"
             val CITY_KEY_NAME = "name"
         }

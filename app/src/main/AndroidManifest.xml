@@ -21,6 +21,12 @@
         </activity>
 
         <activity android:name=".activity.WeatherActivity" />
+
+        <provider
+            android:authorities="com.meteo.iut.meteo.database.CityProvider"
+            android:name=".provider.CityProvider"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>
