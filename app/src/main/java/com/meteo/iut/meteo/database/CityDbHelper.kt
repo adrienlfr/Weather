@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.net.Uri
 import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 
@@ -39,20 +40,33 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         onCreate(db)
     }
 
-    fun addCity(city: City){
+    fun addCity(cityName: String){
         val values = ContentValues()
-        values.put(CityEntry.CITY_KEY_NAME, city.name)
+        values.put(CityEntry.CITY_KEY_NAME, cityName)
 
-        contentResolver.insert(CityContract.BASE_CONTENT_URI, values)
+        contentResolver.insert(CityContract.CONTENT_URI, values)
     }
 
-   fun getCity(cityName: String): City? {
-        val projection = arrayOf(CityEntry.CITY_KEY_ID, CityEntry.CITY_KEY_NAME)
+    fun deleteCity(cityName: String): Boolean {
+        var result = false
 
         val selection = "${CityEntry.CITY_KEY_NAME} = \"${cityName}\""
 
-        val cursor = contentResolver.query(CityContract.BASE_CONTENT_URI,
-                projection, selection, null, null)
+        val rowsDeleted = contentResolver.delete(CityContract.CONTENT_URI,
+                selection, null)
+
+        if (rowsDeleted > 0)
+            result = true
+
+        return result
+    }
+
+   fun getCity(uriCity: Uri): City? {
+        val projection = arrayOf(CityEntry.CITY_KEY_ID, CityEntry.CITY_KEY_NAME)
+
+
+        val cursor = contentResolver.query(uriCity,
+                projection, null, null, null)
 
         var city: City? = null
 
@@ -64,33 +78,6 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             cursor.close()
         }
         return city
-    }
-
-    fun getAllCities(): MutableList<City> {
-        val cities = mutableListOf<City>()
-
-        readableDatabase.rawQuery(CITY_QUERY_SELECT_ALL, null).use { cursor ->
-            while(cursor.moveToNext()) {
-                val ville = City(cursor.getLong(cursor.getColumnIndex(CityEntry.CITY_KEY_ID)), cursor.getString(cursor.getColumnIndex(CityEntry.CITY_KEY_NAME)))
-                cities.add(ville)
-            }
-        }
-
-        return cities
-    }
-
-    fun deleteCity(cityName: String): Boolean {
-        var result = false
-
-        val selection = "${CityEntry.CITY_KEY_NAME} = \"${cityName}\""
-
-        val rowsDeleted = contentResolver.delete(CityContract.BASE_CONTENT_URI,
-                selection, null)
-
-        if (rowsDeleted > 0)
-            result = true
-
-        return result
     }
 
 }

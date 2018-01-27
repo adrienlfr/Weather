@@ -1,17 +1,28 @@
 package com.meteo.iut.meteo.fragment
 
+import android.content.ContentValues
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.CursorLoader
+import android.support.v4.content.Loader
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
+
 import com.meteo.iut.meteo.App
 import com.meteo.iut.meteo.R
 import com.meteo.iut.meteo.activity.CityActivity
 import com.meteo.iut.meteo.data.City
-import com.meteo.iut.meteo.adapter.CityAdapter
+import com.meteo.iut.meteo.adapter.CityRecyclerViewAdapter
+import com.meteo.iut.meteo.database.CityContract
+import com.meteo.iut.meteo.database.CityContract.CityEntry
+import com.meteo.iut.meteo.database.CityCursorWrapper
 import com.meteo.iut.meteo.database.CityDbHelper
 import com.meteo.iut.meteo.dialog.CreateCityDialogFragment
 import com.meteo.iut.meteo.dialog.DeleteCityDialogFragment
@@ -22,24 +33,23 @@ import com.meteo.iut.meteo.utils.toast
 /**
  * Created by adrien on 10/01/2018.
  */
-class CityFragment : Fragment(), CityAdapter.CityItemListener {
+class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     interface CityFragmentListener {
-        fun onCitySelected(city: City)
+        fun onCitySelected(uriCity: Uri)
         fun onEmptyCities()
     }
 
     var listener: CityFragmentListener? = null
+    private val CITY_LOADER = 0
 
-    private lateinit var villes: MutableList<City>
     private lateinit var database : CityDbHelper
     private lateinit var recyclerView: RecyclerView
     private lateinit var floatingButton: FloatingActionButton
-    private lateinit var adapter: CityAdapter
+    private lateinit var recyclerViewAdapter: CityRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        database = App.database
         setHasOptionsMenu(true)
     }
 
@@ -48,10 +58,16 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
         recyclerView = view.findViewById(R.id.cities_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
+        val glm = GridLayoutManager(recyclerView.context, 1)
+        recyclerView.layoutManager = glm
+
+        recyclerViewAdapter = CityRecyclerViewAdapter(this)
+        recyclerView.adapter = recyclerViewAdapter
+
         val swipeHandler = object : SwipeToDeleteCallback(this.context) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val city = adapter.getItem(viewHolder.adapterPosition)
-                showDeleteCityDialog(city)
+                val cursor = recyclerViewAdapter.getItem(viewHolder.adapterPosition)
+                cursor.let {showDeleteCityDialog(cursor!!)}
             }
         }
 
@@ -59,17 +75,34 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
         touchHelper.attachToRecyclerView(recyclerView)
 
         floatingButton = view.findViewById(R.id.floatingActionButton)
-        floatingButton.setOnClickListener({v -> showCreateCityDialog()})
+        floatingButton.setOnClickListener({_ -> showCreateCityDialog()})
         return view
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        villes = database.getAllCities()
-        adapter = CityAdapter(villes, this)
-        recyclerView.adapter = adapter
+        database = App.database
+        loaderManager.initLoader(CITY_LOADER, null, this)
     }
+
+
+    override fun onLoaderReset(loader: Loader<Cursor>?) {
+        recyclerViewAdapter.swapCursor(null)
+    }
+
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+        val projection = arrayOf(
+                CityEntry.CITY_KEY_ID,
+                CityEntry.CITY_KEY_NAME
+        )
+
+        return CursorLoader(context, CityContract.CONTENT_URI, projection, null, null, null)
+    }
+
+    override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
+        recyclerViewAdapter.swapCursor(data)
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.fragment_city, menu)
@@ -87,26 +120,25 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCitySelected(city: City) {
-        listener?.onCitySelected(city)
+
+    override fun onCitySelected(uriCity: Uri) {
+        listener?.onCitySelected(uriCity)
     }
 
-    override fun onCityDeleted(city: City) {
-        showDeleteCityDialog(city)
+    override fun onCityDeleted(cursor: Cursor) {
+        showDeleteCityDialog(cursor)
     }
 
-    fun selectFirstCity(){
-        when (villes.isEmpty()){
-            true -> listener?.onEmptyCities()
-            false -> onCitySelected(villes.first())
-        }
+    private fun selectFirstCity(){
+
     }
+
 
     private fun showCreateCityDialog() {
         val createCityFragment = CreateCityDialogFragment()
         createCityFragment.listener = object : CreateCityDialogFragment.CreateCityDialogListerner {
             override fun onDialogPositiveClick(cityName: String) {
-                saveCity(City(cityName))
+                saveCity(cityName)
             }
 
             override fun onDialogNegativeClick() { }
@@ -115,36 +147,34 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
         createCityFragment.show(fragmentManager, "CreateCityDialogFragment")
     }
 
-    private fun showDeleteCityDialog(city: City) {
-        val deleteCityFragment = DeleteCityDialogFragment.newInstance(city.name)
+    private fun showDeleteCityDialog(cursor: Cursor) {
+        val values = CityCursorWrapper(cursor).getCityContentValues()
+        val cityName = values.getAsString(CityEntry.CITY_KEY_NAME)
+
+        val deleteCityFragment = DeleteCityDialogFragment.newInstance(cityName)
         deleteCityFragment.listener = object: DeleteCityDialogFragment.DeleteCityDialogListener {
             override fun onDialogPositiveClick() {
-                deleteCity(city)
+                deleteCity(cityName)
             }
 
             override fun onDialogNegativeClick() {
-                adapter.notifyDataSetChanged()
+                recyclerViewAdapter.notifyDataSetChanged()
             }
         }
-
 
         deleteCityFragment.show(fragmentManager, "DeleteCityDialogFragment")
     }
 
-    private fun deleteCity(city: City) {
-        if ( database.deleteCity(city.name) ) {
-            villes.remove(city)
-            adapter.notifyDataSetChanged()
-            context.toast(getString(R.string.deletecity_found, city.name))
+    private fun deleteCity(cityName: String) {
+        if ( database.deleteCity(cityName) ) {
+            context.toast(getString(R.string.deletecity_found, cityName))
         }else{
-            context.toast(getString(R.string.deletecity_impossible, city.name))
+            context.toast(getString(R.string.deletecity_impossible, cityName))
         }
     }
 
-    private fun saveCity(city: City) {
-        database.addCity(city)
-        villes.add(city)
-        adapter.notifyDataSetChanged()
+    private fun saveCity(cityName: String) {
+        database.addCity(cityName)
         if ((activity as CityActivity).isTwoPane)
             selectFirstCity()
     }

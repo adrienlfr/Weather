@@ -35,7 +35,7 @@ class CityProvider : ContentProvider() {
             else -> throw IllegalArgumentException("Unknown URI: " + uri)
         }
         context.contentResolver.notifyChange(uri, null)
-        return Uri.parse("${CityEntry.CITY_TABLE_NAME}/${id}")
+        return Uri.parse("${CityEntry.CITY_TABLE_NAME}/$id")
     }
 
     override fun query(uri: Uri, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor? {

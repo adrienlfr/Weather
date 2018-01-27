@@ -1,8 +1,10 @@
 package com.meteo.iut.meteo.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import com.meteo.iut.meteo.R
 import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.fragment.CityFragment
@@ -11,7 +13,7 @@ import com.meteo.iut.meteo.fragment.WeatherFragment
 class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
     private lateinit var cityFragment: CityFragment
-    private lateinit var currentCity: City
+    private lateinit var currentUriCity: Uri
     private var weatherFragment: WeatherFragment? = null
     var isTwoPane: Boolean = false
 
@@ -22,29 +24,38 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
         cityFragment = supportFragmentManager.findFragmentById(R.id.city_fragment) as CityFragment
         cityFragment.listener = this
 
-        if (!isTwoPane)
-            weatherFragment = supportFragmentManager.findFragmentById(R.id.weather_fragment) as WeatherFragment?
+
+        isTwoPane = findViewById<View>(R.id.weather_fragment) != null
+        isTwoPane = weatherFragment != null
+
+        weatherFragment = supportFragmentManager.findFragmentById(R.id.weather_fragment) as WeatherFragment?
+
+        if (!isTwoPane) removeDisplayedFragment()
     }
 
 
-    override fun onCitySelected(city: City) {
-        currentCity = city
+    override fun onCitySelected(uriCity: Uri) {
+        currentUriCity = uriCity
         if (isHandsetLayout()) {
-            startWeatherActivity(city)
+            startWeatherActivity(uriCity)
         } else {
-            weatherFragment?.updateWeatherForCity(city.name)
+            weatherFragment?.updateWeatherForCity(uriCity)
         }
     }
 
-    override fun onEmptyCities() {
-        weatherFragment?.clearUi()
+    private fun removeDisplayedFragment() {
+        if(weatherFragment != null) supportFragmentManager.beginTransaction().remove(weatherFragment).commit()
     }
 
-    fun isHandsetLayout(): Boolean = weatherFragment == null
+    override fun onEmptyCities() {
+        weatherFragment?.initUi()
+    }
 
-    private fun startWeatherActivity(city: City) {
+    private fun isHandsetLayout(): Boolean = weatherFragment == null
+
+    private fun startWeatherActivity(uriCity: Uri) {
         val intent = Intent( this, WeatherActivity::class.java)
-        intent.putExtra(WeatherFragment.EXTRA_CITY_NAME, city.name)
+        intent.putExtra(WeatherFragment.EXTRA_CITY_URI, uriCity)
         startActivity(intent)
     }
 }
