@@ -13,11 +13,7 @@ import com.meteo.iut.meteo.database.CityContract.CityEntry
  */
 class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
-    private val contentResolver: ContentResolver
-
-    init {
-        contentResolver = context.contentResolver
-    }
+    private val contentResolver: ContentResolver = context.contentResolver
 
     companion object {
         val DATABASE_VERSION = 1
@@ -50,10 +46,10 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         contentResolver.insert(CityContract.BASE_CONTENT_URI, values)
     }
 
-   fun findCity(cityName: String): City? {
+   fun getCity(cityName: String): City? {
         val projection = arrayOf(CityEntry.CITY_KEY_ID, CityEntry.CITY_KEY_NAME)
 
-        val selection = "${CityEntry.CITY_KEY_NAME} = \" ${cityName} \""
+        val selection = "${CityEntry.CITY_KEY_NAME} = \"${cityName}\""
 
         val cursor = contentResolver.query(CityContract.BASE_CONTENT_URI,
                 projection, selection, null, null)
@@ -61,7 +57,7 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         var city: City? = null
 
         if (cursor.moveToFirst()) {
-            val id = Integer.parseInt(cursor.getString(0))
+            val id = Integer.parseInt(cursor.getString(0)).toLong()
             val cityName = cursor.getString(1)
 
             city = City(id,cityName)
@@ -70,19 +66,31 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return city
     }
 
-    /* fun deleteProduct(productname: String): Boolean {
+    fun getAllCities(): MutableList<City> {
+        val cities = mutableListOf<City>()
 
+        readableDatabase.rawQuery(CITY_QUERY_SELECT_ALL, null).use { cursor ->
+            while(cursor.moveToNext()) {
+                val ville = City(cursor.getLong(cursor.getColumnIndex(CityEntry.CITY_KEY_ID)), cursor.getString(cursor.getColumnIndex(CityEntry.CITY_KEY_NAME)))
+                cities.add(ville)
+            }
+        }
+
+        return cities
+    }
+
+    fun deleteCity(cityName: String): Boolean {
         var result = false
 
-        val selection = "productname = \"" + productname + "\""
+        val selection = "${CityEntry.CITY_KEY_NAME} = \"${cityName}\""
 
-        val rowsDeleted = myCR.delete(MyContentProvider.CONTENT_URI,
+        val rowsDeleted = contentResolver.delete(CityContract.BASE_CONTENT_URI,
                 selection, null)
 
         if (rowsDeleted > 0)
             result = true
 
         return result
-    }﻿*/
+    }
 
 }

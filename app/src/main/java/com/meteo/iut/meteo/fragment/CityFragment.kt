@@ -8,11 +8,11 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
 import com.meteo.iut.meteo.App
-import com.meteo.iut.meteo.Database
 import com.meteo.iut.meteo.R
 import com.meteo.iut.meteo.activity.CityActivity
 import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.adapter.CityAdapter
+import com.meteo.iut.meteo.database.CityDbHelper
 import com.meteo.iut.meteo.dialog.CreateCityDialogFragment
 import com.meteo.iut.meteo.dialog.DeleteCityDialogFragment
 import com.meteo.iut.meteo.utils.SwipeToDeleteCallback
@@ -32,7 +32,7 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
     var listener: CityFragmentListener? = null
 
     private lateinit var villes: MutableList<City>
-    private lateinit var database : Database
+    private lateinit var database : CityDbHelper
     private lateinit var recyclerView: RecyclerView
     private lateinit var floatingButton: FloatingActionButton
     private lateinit var adapter: CityAdapter
@@ -132,7 +132,7 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
     }
 
     private fun deleteCity(city: City) {
-        if ( database.deleteCity(city) ) {
+        if ( database.deleteCity(city.name) ) {
             villes.remove(city)
             adapter.notifyDataSetChanged()
             context.toast(getString(R.string.deletecity_found, city.name))
@@ -142,13 +142,10 @@ class CityFragment : Fragment(), CityAdapter.CityItemListener {
     }
 
     private fun saveCity(city: City) {
-        if (database.createCity(city)) {
-            villes.add(city)
-            adapter.notifyDataSetChanged()
-            if ((activity as CityActivity).isTwoPane)
-                selectFirstCity()
-        }else{
-            context.toast(getString(R.string.createcity_impossible))
-        }
+        database.addCity(city)
+        villes.add(city)
+        adapter.notifyDataSetChanged()
+        if ((activity as CityActivity).isTwoPane)
+            selectFirstCity()
     }
 }

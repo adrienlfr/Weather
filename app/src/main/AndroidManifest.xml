@@ -20,13 +20,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.WeatherActivity" />
+        <activity android:name=".activity.WeatherActivity"
+            android:parentActivityName=".activity.CityActivity"/>
 
         <provider
-            android:authorities="com.meteo.iut.meteo.database.CityProvider"
-            android:name=".provider.CityProvider"
-            android:enabled="true"
-            android:exported="true" />
+            android:authorities="com.meteo.iut.meteo"
+            android:name="com.meteo.iut.meteo.database.CityProvider" />
     </application>
 
 </manifest>
