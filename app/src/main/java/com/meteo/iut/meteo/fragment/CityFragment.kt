@@ -156,7 +156,6 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
             }
 
             override fun onDialogNegativeClick() {
-                recyclerViewAdapter.notifyDataSetChanged()
             }
         }
 

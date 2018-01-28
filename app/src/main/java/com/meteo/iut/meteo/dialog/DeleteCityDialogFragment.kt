@@ -46,6 +46,9 @@ class DeleteCityDialogFragment : DialogFragment() {
                 .setPositiveButton(getString(R.string.commun_yes), { _, _ -> listener?.onDialogPositiveClick()} )
                 .setNegativeButton(getString(R.string.commun_no), { _, _ -> listener?.onDialogNegativeClick()} )
 
-        return builder.create()
+        val dialog = builder.create()
+        dialog.setCanceledOnTouchOutside(false)
+
+        return dialog
     }
 }
