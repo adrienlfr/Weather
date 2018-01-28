@@ -35,7 +35,7 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
     }
 
 
-    override fun onCitySelected(uriCity: Uri) {
+    override fun onCitySelected(uriCity: Uri, position: Int?) {
         currentUriCity = uriCity
         if (isTwoPane) {
             weatherFragment?.updateWeatherForCity(uriCity)

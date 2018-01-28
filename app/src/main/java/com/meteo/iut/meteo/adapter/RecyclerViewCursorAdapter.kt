@@ -7,7 +7,6 @@ import com.meteo.iut.meteo.database.CityContract.CityEntry
 abstract class RecyclerViewCursorAdapter<ViewHolder : RecyclerView.ViewHolder> : RecyclerView.Adapter<ViewHolder>() {
 
     var cursor: Cursor? = null
-        private set
     private var rowIDColumn = -1
 
     init {

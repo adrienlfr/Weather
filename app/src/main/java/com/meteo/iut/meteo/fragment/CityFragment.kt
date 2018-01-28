@@ -31,7 +31,7 @@ import com.meteo.iut.meteo.utils.toast
 class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     interface CityFragmentListener {
-        fun onCitySelected(uriCity: Uri)
+        fun onCitySelected(uriCity: Uri, position: Int?)
         fun onEmptyCities()
     }
 
@@ -116,8 +116,8 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     }
 
 
-    override fun onCitySelected(uriCity: Uri) {
-        listener?.onCitySelected(uriCity)
+    override fun onCitySelected(uriCity: Uri, position: Int?) {
+        listener?.onCitySelected(uriCity, position)
     }
 
     override fun onCityDeleted(cursor: Cursor) {
@@ -126,7 +126,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
 
     private fun selectFirstCity(){
         when(recyclerViewAdapter.itemCount > 0) {
-            true -> onCitySelected(recyclerViewAdapter.getItem(0)!!.notificationUri)
+            true -> onCitySelected(recyclerViewAdapter.getItem(0)!!.notificationUri, null)
             false -> listener?.onEmptyCities()
         }
     }
@@ -176,6 +176,6 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
 
     private fun saveCity(cityName: String) {
         val uriCity = database.addCity(cityName)
-        onCitySelected(Uri.parse("${CityContract.BASE_CONTENT_URI}/$uriCity"))
+        onCitySelected(Uri.parse("${CityContract.BASE_CONTENT_URI}/$uriCity"), null)
     }
 }

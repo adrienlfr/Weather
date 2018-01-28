@@ -33,7 +33,13 @@ import retrofit2.Response
 class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     companion object {
-        fun newInstance() = WeatherFragment()
+        fun newInstance(uriCity : Uri) : WeatherFragment {
+            val args = Bundle()
+            args.putParcelable(Extra.EXTRA_CITY_URI, uriCity)
+            val fragment = WeatherFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 
     private lateinit var refreshLayout: SwipeRefreshLayout
@@ -50,6 +56,9 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = App.database
+        if (activity?.intent!!.hasExtra(Extra.EXTRA_CITY_URI)) {
+            arguments.putParcelable(Extra.EXTRA_CITY_URI, activity!!.intent.getParcelableExtra<Uri>(Extra.EXTRA_CITY_URI))
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -71,9 +80,7 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (activity?.intent!!.hasExtra(Extra.EXTRA_CITY_URI)) {
-            updateWeatherForCity(activity!!.intent.getParcelableExtra<Uri>(Extra.EXTRA_CITY_URI))
-        }
+        updateWeatherForCity(arguments.getParcelable<Uri>(Extra.EXTRA_CITY_URI))
     }
 
 
@@ -118,7 +125,7 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             refreshLayout.isRefreshing = true
         }
 
-        val call = App.WEATHER_SERVICE.getMeteo(cityName)
+        val call = App.WEATHER_SERVICE.getWeather(cityName)
         call.enqueue(object: Callback<Weather> {
             override fun onResponse(call: Call<Weather>?, response: Response<Weather>?) {
                 response?.body()?.currentObservation?.let { updateUi(it) }

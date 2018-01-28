@@ -8,5 +8,5 @@ import retrofit2.http.Path
 interface WeatherService {
 
     @GET("conditions/lang:FR/q/FR/{cityName}.json")
-    fun getMeteo(@Path("cityName") cityName: String) : Call<Weather>
+    fun getWeather(@Path("cityName") cityName: String) : Call<Weather>
 }

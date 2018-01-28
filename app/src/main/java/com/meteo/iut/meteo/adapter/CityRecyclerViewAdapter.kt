@@ -3,7 +3,6 @@ package com.meteo.iut.meteo.adapter
 import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
-import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,16 +15,21 @@ import com.meteo.iut.meteo.database.CityCursorWrapper
 
 
 class CityRecyclerViewAdapter(
-        private val cityListener: CityItemListener) : RecyclerViewCursorAdapter<CityRecyclerViewAdapter.ViewHolder>(), View.OnClickListener {
+        private val cityListener: CityItemListener) : RecyclerViewCursorAdapter<CityRecyclerViewAdapter.ViewHolder>() {
 
     interface CityItemListener {
-        fun onCitySelected(uriCity: Uri)
+        fun onCitySelected(uriCity: Uri, position: Int?)
         fun onCityDeleted(cursor: Cursor)
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val cardView = itemView.findViewById<CardView>(R.id.card_view)!!
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cityNameView = itemView.findViewById<TextView>(R.id.name)!!
+        lateinit var cityUri: Uri
+        init {
+            itemView.setOnClickListener {
+                    cityListener.onCitySelected(cityUri, adapterPosition)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -37,15 +41,8 @@ class CityRecyclerViewAdapter(
         val cityValues = CityCursorWrapper(cursor).getCityContentValues()
 
         with(holder) {
-            cardView.tag = ContentUris.withAppendedId(CityContract.CONTENT_URI, cityValues.getAsLong(CityEntry.CITY_KEY_ID))
-            cardView.setOnClickListener(this@CityRecyclerViewAdapter)
+            cityUri = ContentUris.withAppendedId(CityContract.CONTENT_URI, cityValues.getAsLong(CityEntry.CITY_KEY_ID))
             cityNameView.text = cityValues.getAsString(CityEntry.CITY_KEY_NAME)
-        }
-    }
-
-    override fun onClick(view: View) {
-        when(view.id) {
-            R.id.card_view -> cityListener.onCitySelected(view.tag as Uri)
         }
     }
 }
