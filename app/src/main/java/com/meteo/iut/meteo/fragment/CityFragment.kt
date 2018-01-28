@@ -1,6 +1,5 @@
 package com.meteo.iut.meteo.fragment
 
-import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -18,21 +17,17 @@ import android.view.*
 import com.meteo.iut.meteo.App
 import com.meteo.iut.meteo.R
 import com.meteo.iut.meteo.activity.CityActivity
-import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.adapter.CityRecyclerViewAdapter
 import com.meteo.iut.meteo.database.CityContract
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 import com.meteo.iut.meteo.database.CityCursorWrapper
-import com.meteo.iut.meteo.database.CityDbHelper
+import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.dialog.CreateCityDialogFragment
 import com.meteo.iut.meteo.dialog.DeleteCityDialogFragment
 import com.meteo.iut.meteo.utils.SwipeToDeleteCallback
 import com.meteo.iut.meteo.utils.toast
 
 
-/**
- * Created by adrien on 10/01/2018.
- */
 class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     interface CityFragmentListener {
@@ -43,13 +38,14 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     var listener: CityFragmentListener? = null
     private val CITY_LOADER = 0
 
-    private lateinit var database : CityDbHelper
+    private lateinit var database : CityQuery
     private lateinit var recyclerView: RecyclerView
     private lateinit var floatingButton: FloatingActionButton
     private lateinit var recyclerViewAdapter: CityRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        database = App.database
         setHasOptionsMenu(true)
     }
 
@@ -81,7 +77,6 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        database = App.database
         loaderManager.initLoader(CITY_LOADER, null, this)
     }
 
@@ -130,7 +125,10 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     }
 
     private fun selectFirstCity(){
-
+        when(recyclerViewAdapter.itemCount > 0) {
+            true -> onCitySelected(recyclerViewAdapter.getItem(0)!!.notificationUri)
+            false -> listener?.onEmptyCities()
+        }
     }
 
 
@@ -168,14 +166,17 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     private fun deleteCity(cityName: String) {
         if ( database.deleteCity(cityName) ) {
             context.toast(getString(R.string.deletecity_found, cityName))
+            if ((activity as CityActivity).isTwoPane && (activity as CityActivity).currentUriCity != null) {
+                if (database.getCity((activity as CityActivity).currentUriCity!!) == null)
+                    selectFirstCity()
+            }
         }else{
             context.toast(getString(R.string.deletecity_impossible, cityName))
         }
     }
 
     private fun saveCity(cityName: String) {
-        database.addCity(cityName)
-        if ((activity as CityActivity).isTwoPane)
-            selectFirstCity()
+        val uriCity = database.addCity(cityName)
+        onCitySelected(Uri.parse("${CityContract.BASE_CONTENT_URI}/$uriCity"))
     }
 }

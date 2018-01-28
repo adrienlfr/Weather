@@ -1,7 +1,5 @@
 package com.meteo.iut.meteo.fragment
 
-import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -10,7 +8,6 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import android.support.v4.widget.SwipeRefreshLayout
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,16 +21,14 @@ import com.meteo.iut.meteo.data.Weather
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 import com.meteo.iut.meteo.database.CityContract
 import com.meteo.iut.meteo.database.CityCursorWrapper
-import com.meteo.iut.meteo.database.CityDbHelper
+import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.utils.toast
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/**
- * Created by adrien on 10/01/2018.
- */
+
 class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     companion object {
@@ -43,7 +38,7 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var uriCity: Uri
-    private lateinit var database: CityDbHelper
+    private lateinit var database: CityQuery
     private lateinit var city: City
     private lateinit var cityName: TextView
     private lateinit var icon: ImageView
@@ -109,11 +104,14 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     fun updateWeatherForCity(uriCity: Uri){
         this.uriCity = uriCity
-        city = database.getCity(uriCity) as City
-        updateWeatherForCity(city.name)
+        val cityTemp = database.getCity(uriCity)
+        cityTemp.let {
+            city = cityTemp!!
+            updateWeatherForCity(city!!.name)
+        }
     }
 
-    fun updateWeatherForCity(cityName: String) {
+    private fun updateWeatherForCity(cityName: String) {
         this.cityName.text = cityName
 
         if (!refreshLayout.isRefreshing){

@@ -10,7 +10,8 @@ object CityContract {
 
     val CONTENT_AUTHORITY = "com.meteo.iut.meteo.database.CityProvider"
     val PATH_CITIES = "cities"
-    val CONTENT_URI : Uri = Uri.parse("content://${CONTENT_AUTHORITY}/${PATH_CITIES}")
+    val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")
+    val CONTENT_URI : Uri = Uri.parse("$BASE_CONTENT_URI/$PATH_CITIES")
 
     abstract class CityEntry : BaseColumns {
         companion object {

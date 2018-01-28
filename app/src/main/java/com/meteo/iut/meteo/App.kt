@@ -1,7 +1,7 @@
 package com.meteo.iut.meteo
 
 import android.app.Application
-import com.meteo.iut.meteo.database.CityDbHelper
+import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.utils.WeatherService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,8 +17,8 @@ class App : Application() {
     companion object {
         lateinit var instance: App
 
-        val database: CityDbHelper by lazy {
-            CityDbHelper(instance)
+        val database: CityQuery by lazy {
+            CityQuery(instance)
         }
 
         private val retrofit = Retrofit.Builder()
