@@ -22,6 +22,7 @@ import com.meteo.iut.meteo.database.CityContract.CityEntry
 import com.meteo.iut.meteo.database.CityContract
 import com.meteo.iut.meteo.database.CityCursorWrapper
 import com.meteo.iut.meteo.database.CityQuery
+import com.meteo.iut.meteo.utils.Extra
 import com.meteo.iut.meteo.utils.toast
 import com.squareup.picasso.Picasso
 import retrofit2.Call
@@ -32,7 +33,6 @@ import retrofit2.Response
 class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     companion object {
-        val EXTRA_CITY_URI = "com.meteo.itu.meteo.extras.EXTRA_CITY_URI"
         fun newInstance() = WeatherFragment()
     }
 
@@ -71,8 +71,8 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (activity?.intent!!.hasExtra(EXTRA_CITY_URI)) {
-            updateWeatherForCity(activity!!.intent.getParcelableExtra<Uri>(EXTRA_CITY_URI))
+        if (activity?.intent!!.hasExtra(Extra.EXTRA_CITY_URI)) {
+            updateWeatherForCity(activity!!.intent.getParcelableExtra<Uri>(Extra.EXTRA_CITY_URI))
         }
     }
 

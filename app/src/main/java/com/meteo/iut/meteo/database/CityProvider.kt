@@ -9,9 +9,6 @@ import android.net.Uri
 import android.text.TextUtils
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 
-/**
- * Created by adrien on 24/01/2018.
- */
 class CityProvider : ContentProvider() {
     private lateinit var cityDbHelper : CityDbHelper
 

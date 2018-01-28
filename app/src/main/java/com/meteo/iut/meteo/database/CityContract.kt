@@ -3,9 +3,6 @@ package com.meteo.iut.meteo.database
 import android.net.Uri
 import android.provider.BaseColumns
 
-/**
- * Created by adrien on 24/01/2018.
- */
 object CityContract {
 
     val CONTENT_AUTHORITY = "com.meteo.iut.meteo.database.CityProvider"

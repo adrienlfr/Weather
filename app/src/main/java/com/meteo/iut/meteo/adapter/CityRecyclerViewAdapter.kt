@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.meteo.iut.meteo.R
-import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.database.CityContract
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 import com.meteo.iut.meteo.database.CityCursorWrapper
@@ -43,15 +42,6 @@ class CityRecyclerViewAdapter(
             cityNameView.text = cityValues.getAsString(CityEntry.CITY_KEY_NAME)
         }
     }
-
-    /*override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val ville = villes[position]
-        with(holder) {
-            cardView.tag = ville
-            cardView.setOnClickListener(this@CityRecyclerViewAdapter)
-            cityNameView.text = ville.name
-        }
-    }*/
 
     override fun onClick(view: View) {
         when(view.id) {

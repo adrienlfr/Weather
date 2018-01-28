@@ -4,9 +4,6 @@ import android.database.Cursor
 import android.support.v7.widget.RecyclerView
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 
-/**
- * Created by adrien on 27/01/2018.
- */
 abstract class RecyclerViewCursorAdapter<ViewHolder : RecyclerView.ViewHolder> : RecyclerView.Adapter<ViewHolder>() {
 
     var cursor: Cursor? = null

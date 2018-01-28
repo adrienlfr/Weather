@@ -1,17 +1,10 @@
 package com.meteo.iut.meteo.database
 
-import android.content.ContentResolver
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.net.Uri
-import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 
-/**
- * Created by adrien on 24/01/2018.
- */
 class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
@@ -25,7 +18,6 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             )
             """
 
-        private val CITY_QUERY_SELECT_ALL = "SELECT * FROM ${CityEntry.CITY_TABLE_NAME}"
         private val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${CityEntry.CITY_TABLE_NAME}"
     }
 

@@ -5,11 +5,8 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import com.meteo.iut.meteo.R
+import com.meteo.iut.meteo.utils.Extra
 
-
-/**
- * Created by adrien on 10/01/2018.
- */
 class DeleteCityDialogFragment : DialogFragment() {
 
     interface DeleteCityDialogListener {
@@ -18,13 +15,10 @@ class DeleteCityDialogFragment : DialogFragment() {
     }
 
     companion object {
-
-        val EXTRA_CITY_NAME = "com.meteo.iut.meteo.extras.EXTRA_CITY_NAME"
-
         fun newInstance(cityName: String) : DeleteCityDialogFragment {
             val fragment = DeleteCityDialogFragment()
             fragment.arguments = Bundle().apply {
-                putString(EXTRA_CITY_NAME, cityName)
+                putString(Extra.EXTRA_CITY_NAME, cityName)
             }
 
             return fragment
@@ -36,7 +30,7 @@ class DeleteCityDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cityName = arguments!!.getString(EXTRA_CITY_NAME)
+        cityName = arguments!!.getString(Extra.EXTRA_CITY_NAME)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

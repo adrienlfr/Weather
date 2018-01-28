@@ -6,9 +6,9 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.meteo.iut.meteo.R
-import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.fragment.CityFragment
 import com.meteo.iut.meteo.fragment.WeatherFragment
+import com.meteo.iut.meteo.utils.Extra
 
 class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
@@ -54,7 +54,7 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
     private fun startWeatherActivity(uriCity: Uri) {
         val intent = Intent( this, WeatherActivity::class.java)
-        intent.putExtra(WeatherFragment.EXTRA_CITY_URI, uriCity)
+        intent.putExtra(Extra.EXTRA_CITY_URI, uriCity)
         startActivity(intent)
     }
 }

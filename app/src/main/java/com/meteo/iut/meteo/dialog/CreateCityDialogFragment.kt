@@ -9,9 +9,6 @@ import android.text.InputType
 import android.widget.EditText
 import com.meteo.iut.meteo.R
 
-/**
- * Created by adrien on 10/01/2018.
- */
 class CreateCityDialogFragment : DialogFragment() {
 
     interface CreateCityDialogListerner{

@@ -6,9 +6,6 @@ import com.meteo.iut.meteo.utils.WeatherService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-/**
- * Created by adrien on 10/01/2018.
- */
 
 private const val API_KEY = "0b7943ce0b8fca43"
 

@@ -5,9 +5,6 @@ import android.database.Cursor
 import android.database.CursorWrapper
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 
-/**
- * Created by adrien on 27/01/2018.
- */
 class CityCursorWrapper(cursor: Cursor) : CursorWrapper(cursor) {
     fun getCityContentValues() : ContentValues {
         val values = ContentValues()
