@@ -1,6 +1,12 @@
 package com.meteo.iut.meteo.fragment
 
+import android.app.Notification
+import android.app.NotificationManager
+import android.app.NotificationChannel
+import android.content.Context
+import android.content.Intent
 import android.database.Cursor
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -17,6 +23,7 @@ import android.view.*
 import com.meteo.iut.meteo.App
 import com.meteo.iut.meteo.R
 import com.meteo.iut.meteo.activity.CityActivity
+import com.meteo.iut.meteo.activity.WeatherActivity
 import com.meteo.iut.meteo.adapter.CityRecyclerViewAdapter
 import com.meteo.iut.meteo.database.CityContract
 import com.meteo.iut.meteo.database.CityContract.CityEntry
@@ -33,6 +40,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     interface CityFragmentListener {
         fun onCitySelected(uriCity: Uri, position: Int?)
         fun onEmptyCities()
+        fun onClickNewNotification()
     }
 
     var listener: CityFragmentListener? = null
@@ -45,6 +53,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         database = App.database
         setHasOptionsMenu(true)
     }
@@ -110,11 +119,13 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
                 showCreateCityDialog()
                 return true
             }
+            R.id.action_new_notification -> {
+                listener?.onClickNewNotification()
+            }
         }
 
         return super.onOptionsItemSelected(item)
     }
-
 
     override fun onCitySelected(uriCity: Uri, position: Int?) {
         listener?.onCitySelected(uriCity, position)

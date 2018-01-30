@@ -16,4 +16,5 @@
     <string name="meteo_temperature_value">%1$d°C</string>
     <string name="meteo_humidity_value">%1$s</string>
     <string name="meteo_pressure_value">%1$s hPa</string>
+    <string name="action_new_notification">Nouvelle notification</string>
 </resources>
