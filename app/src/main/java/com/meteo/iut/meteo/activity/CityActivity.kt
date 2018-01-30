@@ -1,6 +1,5 @@
 package com.meteo.iut.meteo.activity
 
-import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -8,7 +7,6 @@ import android.view.View
 import com.meteo.iut.meteo.R
 import com.meteo.iut.meteo.fragment.CityFragment
 import com.meteo.iut.meteo.fragment.WeatherFragment
-import com.meteo.iut.meteo.utils.Extra
 
 class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
@@ -40,7 +38,7 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
         if (isTwoPane) {
             weatherFragment?.updateWeatherForCity(uriCity)
         } else {
-            startWeatherActivity(uriCity)
+            if (position != null) startWeatherActivity(position)
         }
     }
 
@@ -52,9 +50,8 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
         weatherFragment?.initUi()
     }
 
-    private fun startWeatherActivity(uriCity: Uri) {
-        val intent = Intent( this, WeatherActivity::class.java)
-        intent.putExtra(Extra.EXTRA_CITY_URI, uriCity)
-        startActivity(intent)
+    private fun startWeatherActivity(position: Int) {
+        val activity = WeatherActivity().getIntent(this, position)
+        startActivity(activity)
     }
 }
