@@ -13,12 +13,15 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.meteo.iut.meteo.R
+import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.fragment.CityFragment
 import com.meteo.iut.meteo.fragment.WeatherFragment
+import com.meteo.iut.meteo.utils.Extra
 
 class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
     private lateinit var cityFragment: CityFragment
+    private lateinit var database: CityQuery
     private var weatherFragment: WeatherFragment? = null
     private var notificationManager: NotificationManager? = null
 
@@ -40,7 +43,7 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
             removeDisplayedFragment()
         }
 
-
+        database = CityQuery(this)
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel("com.meteo.iut.meteo", "Notification Weather", "Exemple Weather")
     }
@@ -76,15 +79,23 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
     private fun sendNotification() {
         val notificationId = 101
-        val weatherIntent = arrayOf(Intent(this, WeatherActivity::class.java))
 
-        val pendingIntent = PendingIntent.getActivities(this, 0, weatherIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = Intent( this, WeatherActivity::class.java)
 
-        val channelId = "com.meteo.iut.meteo"
+        if(currentUriCity != null) {
+            val city = database.getCity(currentUriCity!!)
+            city.let { intent.putExtra(Extra.EXTRA_CITY_NAME, city!!.name) }
+        }
+
+        val arrayWeatherIntent = arrayOf(intent)
+
+        val pendingIntent = PendingIntent.getActivities(this, 0, arrayWeatherIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val channelId = Extra.APP_ID
 
         val icon = Icon.createWithResource(this, android.R.drawable.ic_dialog_info)
 
-        val action: Notification.Action = Notification.Action.Builder(icon, "Open", pendingIntent).build()
+        val action = Notification.Action.Builder(icon, "Open", pendingIntent).build()
 
         val notification = Notification.Builder(this@CityActivity, channelId)
                 .setContentTitle("Titre")

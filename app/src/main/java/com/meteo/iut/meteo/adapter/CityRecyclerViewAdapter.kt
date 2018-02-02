@@ -22,16 +22,6 @@ class CityRecyclerViewAdapter(
         fun onCityDeleted(cursor: Cursor)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val cityNameView = itemView.findViewById<TextView>(R.id.name)!!
-        lateinit var cityUri: Uri
-        init {
-            itemView.setOnClickListener {
-                    cityListener.onCitySelected(cityUri, adapterPosition)
-            }
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
         val viewItem = LayoutInflater.from(parent?.context).inflate(R.layout.item_city, parent, false)
         return ViewHolder(viewItem)
@@ -43,6 +33,16 @@ class CityRecyclerViewAdapter(
         with(holder) {
             cityUri = ContentUris.withAppendedId(CityContract.CONTENT_URI, cityValues.getAsLong(CityEntry.CITY_KEY_ID))
             cityNameView.text = cityValues.getAsString(CityEntry.CITY_KEY_NAME)
+        }
+    }
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cityNameView = itemView.findViewById<TextView>(R.id.name)!!
+        lateinit var cityUri: Uri
+        init {
+            itemView.setOnClickListener {
+                cityListener.onCitySelected(cityUri, adapterPosition)
+            }
         }
     }
 }
