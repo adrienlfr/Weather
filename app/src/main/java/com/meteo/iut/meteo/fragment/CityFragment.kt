@@ -1,6 +1,12 @@
 package com.meteo.iut.meteo.fragment
 
+import android.app.Notification
+import android.app.NotificationManager
+import android.app.NotificationChannel
+import android.content.Context
+import android.content.Intent
 import android.database.Cursor
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -33,10 +39,13 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     interface CityFragmentListener {
         fun onCitySelected(uriCity: Uri, position: Int?)
         fun onEmptyCities()
+        fun onClickNewNotification()
     }
 
     var listener: CityFragmentListener? = null
     private val CITY_LOADER = 0
+    private var displayCity = false
+    private var lastCityUriAdd: Uri? = null
 
     private lateinit var database : CityQuery
     private lateinit var recyclerView: RecyclerView
@@ -45,6 +54,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         database = App.database
         setHasOptionsMenu(true)
     }
@@ -96,6 +106,10 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
 
     override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
         recyclerViewAdapter.swapCursor(data)
+        if (displayCity){
+            displayCurrentCity()
+            displayCity = false
+        }
     }
 
 
@@ -110,11 +124,13 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
                 showCreateCityDialog()
                 return true
             }
+            R.id.action_new_notification -> {
+                listener?.onClickNewNotification()
+            }
         }
 
         return super.onOptionsItemSelected(item)
     }
-
 
     override fun onCitySelected(uriCity: Uri, position: Int?) {
         listener?.onCitySelected(uriCity, position)
@@ -175,7 +191,19 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     }
 
     private fun saveCity(cityName: String) {
-        val uriCity = database.addCity(cityName)
-        onCitySelected(Uri.parse("${CityContract.BASE_CONTENT_URI}/$uriCity"), null)
+        lastCityUriAdd = database.addCity(cityName)
+        displayCity = true
+        loaderManager.restartLoader(CITY_LOADER, arguments, this)
+
+    }
+
+    private fun displayCurrentCity() {
+        if (lastCityUriAdd != null) {
+            val city = database.getCity(lastCityUriAdd!!)
+            if (city != null) {
+                val position = recyclerViewAdapter.positionOfCity(city)
+                onCitySelected(lastCityUriAdd!!, position)
+            }
+        }
     }
 }

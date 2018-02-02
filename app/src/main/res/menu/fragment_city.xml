@@ -6,5 +6,9 @@
         android:id="@+id/action_create_city"
         app:showAsAction="never"
         android:title="@string/menu_create_city" />
+    <item
+        android:id="@+id/action_new_notification"
+        app:showAsAction="never"
+        android:title="@string/action_new_notification" />
 
 </menu>

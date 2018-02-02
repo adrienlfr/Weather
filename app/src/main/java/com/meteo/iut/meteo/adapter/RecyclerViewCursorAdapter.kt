@@ -2,6 +2,7 @@ package com.meteo.iut.meteo.adapter
 
 import android.database.Cursor
 import android.support.v7.widget.RecyclerView
+import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 
 abstract class RecyclerViewCursorAdapter<ViewHolder : RecyclerView.ViewHolder> : RecyclerView.Adapter<ViewHolder>() {
@@ -49,6 +50,25 @@ abstract class RecyclerViewCursorAdapter<ViewHolder : RecyclerView.ViewHolder> :
             throw IllegalStateException("couldn't move cursor to position " + position)
         }
         onBindViewHolder(holder, cursor!!)
+    }
+
+    fun positionOfCity(city : City) : Int? {
+        var position: Int? = null
+        var find = false
+
+        if (cursor != null && cursor!!.moveToFirst()) {
+            do {
+                if (position == null) position = 0 else position++
+
+                val id = Integer.parseInt(cursor!!.getString(0)).toLong()
+                if (id == city.id){
+                    find = true
+                }
+            } while (cursor!!.moveToNext() && !find)
+        }
+
+        if (!find) position = null
+        return position
     }
 
     abstract fun onBindViewHolder(holder: ViewHolder, cursor: Cursor)

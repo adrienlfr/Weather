@@ -1,8 +1,10 @@
 package com.meteo.iut.meteo.database
 
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 
 class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -30,4 +32,15 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         onCreate(db)
     }
 
+    fun countain(cityName: String): Cursor? {
+        var cityCursor : Cursor? = null
+
+        readableDatabase.rawQuery("SELECT * FROM ${CityEntry.CITY_TABLE_NAME} WHERE ${CityEntry.CITY_KEY_NAME} = $cityName", null).use { cursor ->
+            if(cursor.moveToNext()) {
+                cityCursor = cursor
+            }
+        }
+
+        return cityCursor
+    }
 }
