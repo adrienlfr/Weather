@@ -45,7 +45,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     var listener: CityFragmentListener? = null
     private val CITY_LOADER = 0
     private var displayCity = false
-    private var currentCityUri: Uri? = null
+    private var lastCityUriAdd: Uri? = null
 
     private lateinit var database : CityQuery
     private lateinit var recyclerView: RecyclerView
@@ -191,18 +191,18 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     }
 
     private fun saveCity(cityName: String) {
-        currentCityUri = database.addCity(cityName)
+        lastCityUriAdd = database.addCity(cityName)
         displayCity = true
         loaderManager.restartLoader(CITY_LOADER, arguments, this)
 
     }
 
     private fun displayCurrentCity() {
-        if (currentCityUri != null) {
-            val city = database.getCity(currentCityUri!!)
+        if (lastCityUriAdd != null) {
+            val city = database.getCity(lastCityUriAdd!!)
             if (city != null) {
                 val position = recyclerViewAdapter.positionOfCity(city)
-                onCitySelected(currentCityUri!!, position)
+                onCitySelected(lastCityUriAdd!!, position)
             }
         }
     }
