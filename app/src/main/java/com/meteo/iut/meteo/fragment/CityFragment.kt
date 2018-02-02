@@ -181,8 +181,8 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     private fun deleteCity(cityName: String) {
         if ( database.deleteCity(cityName) ) {
             context.toast(getString(R.string.deletecity_found, cityName))
-            if ((activity as CityActivity).isTwoPane && (activity as CityActivity).currentUriCity != null) {
-                if (database.getCity((activity as CityActivity).currentUriCity!!) == null)
+            if ((activity as CityActivity).isTwoPane && CityActivity.currentUriCity != null) {
+                if (database.getCity(CityActivity.currentUriCity!!) == null)
                     selectFirstCity()
             }
         }else{
