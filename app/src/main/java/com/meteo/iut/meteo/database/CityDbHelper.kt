@@ -17,6 +17,8 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             CREATE TABLE ${CityEntry.CITY_TABLE_NAME} (
                 ${CityEntry.CITY_KEY_ID} INTEGER PRIMARY KEY,
                 ${CityEntry.CITY_KEY_NAME} TEXT
+                ${CityEntry.CITY_ROW_INDEX} INTEGER AUTOINCREMENT
+
             )
             """
 
@@ -31,6 +33,7 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         db.execSQL(SQL_DELETE_ENTRIES)
         onCreate(db)
     }
+
 
     fun countain(cityName: String): Cursor? {
         var cityCursor : Cursor? = null

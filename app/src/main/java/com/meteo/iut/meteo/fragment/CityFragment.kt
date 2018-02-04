@@ -30,6 +30,7 @@ import com.meteo.iut.meteo.database.CityCursorWrapper
 import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.dialog.CreateCityDialogFragment
 import com.meteo.iut.meteo.dialog.DeleteCityDialogFragment
+import com.meteo.iut.meteo.utils.DragManageAdapter
 import com.meteo.iut.meteo.utils.SwipeToDeleteCallback
 import com.meteo.iut.meteo.utils.toast
 
@@ -88,6 +89,13 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loaderManager.initLoader(CITY_LOADER, null, this)
+
+        val dragAndDropHandler = DragManageAdapter(recyclerViewAdapter, this.context,
+                ItemTouchHelper.UP.or(ItemTouchHelper.DOWN), ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT))
+
+        val touchHelperDrag = ItemTouchHelper(dragAndDropHandler)
+        touchHelperDrag.attachToRecyclerView(recyclerView)
+
     }
 
 
@@ -103,6 +111,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
 
         return CursorLoader(context, CityContract.CONTENT_URI, projection, null, null, null)
     }
+
 
     override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
         recyclerViewAdapter.swapCursor(data)
