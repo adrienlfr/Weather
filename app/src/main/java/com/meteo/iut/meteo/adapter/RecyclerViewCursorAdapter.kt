@@ -26,50 +26,51 @@ abstract class RecyclerViewCursorAdapter<ViewHolder : RecyclerView.ViewHolder> :
     }
 
     override fun getItemCount(): Int {
-        return if (cursor == null) 0 else cursor!!.count
+        return cursor?.count ?: 0
     }
 
     fun getItem(position: Int): Cursor? {
-        if (cursor != null) {
-            cursor!!.moveToPosition(position)
-        }
+        cursor?.run { moveToPosition(position) }
         return cursor
     }
 
     override fun getItemId(position: Int): Long {
-        return if (cursor != null && cursor!!.moveToPosition(position)) {
-            cursor!!.getLong(rowIDColumn)
-        } else RecyclerView.NO_ID
+        cursor?.let {
+            if(it.moveToPosition(position))
+                return it.getLong(rowIDColumn)
+        }
+        return RecyclerView.NO_ID
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        cursor?.let {
+            if (it.moveToPosition(position)) {
+                onBindViewHolder(holder, it)
+            } else {
+                throw IllegalStateException("Couldn't move cursor to position " + position)
+            }
+        }
         if (cursor == null) {
-            throw IllegalStateException("this should only be called when the cursor is not null")
+            throw IllegalStateException("This should only be called when the cursor is not null")
         }
-        if (!cursor!!.moveToPosition(position)) {
-            throw IllegalStateException("couldn't move cursor to position " + position)
-        }
-        onBindViewHolder(holder, cursor!!)
     }
 
     fun positionOfCity(city : City) : Int? {
-        var position: Int? = null
         var find = false
-
-        if (cursor != null && cursor!!.moveToFirst()) {
-            do {
-                if (position == null) position = 0 else position++
-
-
-                val id = Integer.parseInt(cursor!!.getString(0)).toLong()
-                if (id == city.id){
-                    find = true
-                }
-            } while (cursor!!.moveToNext() && !find)
+        var position: Int? = null
+        cursor?.let {
+            if (it.moveToFirst()) {
+                do {
+                    position = position?.inc() ?: 0
+                    val id = Integer.parseInt(it.getString(0)).toLong()
+                    if (id == city.id){
+                        find = true
+                    }
+                } while (it.moveToNext() && !find)
+            }
         }
 
-        if (!find) position = null
-        return position
+        return if (find) position else null
     }
 
     abstract fun onBindViewHolder(holder: ViewHolder, cursor: Cursor)

@@ -53,8 +53,6 @@ class WeatherActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
 
     override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
         pagerAdapter.swapCursor(data)
-        val startingIntent = intent
-        if (startingIntent != null)
-            viewPager.currentItem = startingIntent.getIntExtra(Extra.EXTRA_INITIAL_POSITION, 0)
+        intent?.let { viewPager.currentItem = it.getIntExtra(Extra.EXTRA_INITIAL_POSITION, 0) }
     }
 }

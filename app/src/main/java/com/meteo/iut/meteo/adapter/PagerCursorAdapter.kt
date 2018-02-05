@@ -16,24 +16,25 @@ class PagerCursorAdapter(fragmentManager: FragmentManager,
     private var rowIDColumn = NO_COLUMN_ID
 
     override fun getItem(position: Int): Fragment? {
-        if (cursor != null && cursor!!.moveToPosition(position)) {
-            return WeatherFragment.newInstance(ContentUris.withAppendedId(CityContract.CONTENT_URI, cursor!!.getLong(rowIDColumn)))
+        cursor?.let {
+            if(it.moveToPosition(position))
+                return WeatherFragment.newInstance(ContentUris.withAppendedId(CityContract.CONTENT_URI, it.getLong(rowIDColumn)))
         }
         return null
     }
 
     override fun getCount(): Int {
-        return if(cursor == null) 0 else cursor!!.count
+        return cursor?.count ?: 0
     }
 
     fun swapCursor(newCursor : Cursor?) : Cursor? {
-        if (newCursor == cursor)
-            return null
-
-        val oldCursor = cursor
-        cursor = newCursor
-        rowIDColumn = if(cursor == null) NO_COLUMN_ID else cursor!!.getColumnIndexOrThrow(CityEntry.CITY_KEY_ID)
-        notifyDataSetChanged()
-        return oldCursor
+        newCursor?.let {
+            val oldCursor = cursor
+            cursor = it
+            rowIDColumn = it.getColumnIndexOrThrow(CityEntry.CITY_KEY_ID)
+            notifyDataSetChanged()
+            return oldCursor
+        }
+        return null
     }
 }

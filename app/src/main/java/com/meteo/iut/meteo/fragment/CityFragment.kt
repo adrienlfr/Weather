@@ -166,9 +166,12 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     private fun deleteCity(cityName: String) {
         if ( database.deleteCity(cityName) ) {
             context.toast(getString(R.string.deletecity_found, cityName))
-            if ((activity as CityActivity).isTwoPane && CityActivity.currentUriCity != null) {
-                if (database.getCity(CityActivity.currentUriCity!!) == null)
-                    selectFirstCity()
+
+            if ((activity as CityActivity).isTwoPane) {
+                CityActivity.currentUriCity?.let {
+                    if (database.getCity(it) == null)
+                        selectFirstCity()
+                }
             }
         }else{
             context.toast(getString(R.string.deletecity_impossible, cityName))
@@ -183,11 +186,10 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     }
 
     private fun displayCurrentCity() {
-        if (lastCityUriAdd != null) {
-            val city = database.getCity(lastCityUriAdd!!)
-            if (city != null) {
+        lastCityUriAdd?.let { lastCityUriAdd ->
+            database.getCity(lastCityUriAdd)?.let { city ->
                 val position = recyclerViewAdapter.positionOfCity(city)
-                onCitySelected(lastCityUriAdd!!, position)
+                onCitySelected(lastCityUriAdd, position)
             }
         }
     }

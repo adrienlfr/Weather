@@ -61,7 +61,7 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
         if (isTwoPane) {
             weatherFragment?.updateWeatherForCity(uriCity)
         } else {
-            if (position != null) startWeatherActivity(position)
+            position?.let { startWeatherActivity(position) }
         }
     }
 
@@ -80,45 +80,42 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
     }
 
     private fun removeDisplayedFragment() {
-        if(weatherFragment != null) supportFragmentManager.beginTransaction().remove(weatherFragment).commit()
+        weatherFragment?.let{ supportFragmentManager.beginTransaction().remove(weatherFragment).commit() }
     }
 
 
     private fun sendNotification() {
         val notificationId = 101
 
-        if (currentUriCity != null && currentPositionCity != null) {
-            val city = database.getCity(currentUriCity!!)
+        currentUriCity?.let {
+            database.getCity(currentUriCity!!)?.let { city ->
+                currentPositionCity?.let {
+                    val intent = WeatherActivity().getIntent(this, currentPositionCity!!)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
-            city.let {
-                val intent = WeatherActivity().getIntent(this, currentPositionCity!!)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    intent.putExtra(Extra.EXTRA_CITY_NAME, city.name)
 
-                if (currentUriCity != null) {
-                    val city = database.getCity(currentUriCity!!)
-                    city.let { intent.putExtra(Extra.EXTRA_CITY_NAME, city!!.name) }
+                    val arrayWeatherIntent = arrayOf(intent)
+
+                    val pendingIntent = PendingIntent.getActivities(this, 0, arrayWeatherIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+                    val channelId = Extra.APP_ID
+
+                    val icon = Icon.createWithResource(this, android.R.drawable.ic_dialog_info)
+
+                    val action = Notification.Action.Builder(icon, getString(R.string.open), pendingIntent).build()
+
+                    val notification = Notification.Builder(this@CityActivity, channelId)
+                            .setContentTitle(getString(R.string.app_name))
+                            .setContentText(getString(R.string.notification_text, city.name))
+                            .setSmallIcon(android.R.drawable.ic_dialog_info)
+                            .setChannelId(channelId)
+                            .setContentIntent(pendingIntent)
+                            .setActions(action)
+                            .build()
+
+                    notificationManager?.notify(notificationId, notification)
                 }
-
-                val arrayWeatherIntent = arrayOf(intent)
-
-                val pendingIntent = PendingIntent.getActivities(this, 0, arrayWeatherIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-                val channelId = Extra.APP_ID
-
-                val icon = Icon.createWithResource(this, android.R.drawable.ic_dialog_info)
-
-                val action = Notification.Action.Builder(icon, getString(R.string.open), pendingIntent).build()
-
-                val notification = Notification.Builder(this@CityActivity, channelId)
-                        .setContentTitle(getString(R.string.app_name))
-                        .setContentText(getString(R.string.notification_text, city!!.name))
-                        .setSmallIcon(android.R.drawable.ic_dialog_info)
-                        .setChannelId(channelId)
-                        .setContentIntent(pendingIntent)
-                        .setActions(action)
-                        .build()
-
-                notificationManager?.notify(notificationId, notification)
             }
         }
     }

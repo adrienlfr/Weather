@@ -80,8 +80,10 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (arguments != null && !arguments.isEmpty) {
-            updateWeatherForCity(arguments.getParcelable<Uri>(Extra.EXTRA_CITY_URI))
+        arguments?.let {
+            if (!arguments.isEmpty) {
+                updateWeatherForCity(arguments.getParcelable<Uri>(Extra.EXTRA_CITY_URI))
+            }
         }
     }
 
