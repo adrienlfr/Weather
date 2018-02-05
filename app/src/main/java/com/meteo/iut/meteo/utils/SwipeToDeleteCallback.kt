@@ -2,8 +2,6 @@ package com.meteo.iut.meteo.utils
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -14,8 +12,6 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
     private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_sweep_black_24dp)
     private val intrinsicWidth = deleteIcon.intrinsicWidth
     private val intrinsicHeight = deleteIcon.intrinsicHeight
-    private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#f44336")
 
     override fun onMove(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?, target: RecyclerView.ViewHolder?): Boolean {
         return false
@@ -24,10 +20,6 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
     override fun onChildDraw(c: Canvas?, recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         val itemView = viewHolder.itemView
         val itemHeight = itemView.bottom - itemView.top
-
-        // background.color = backgroundColor
-        // background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-        // background.draw(c)
 
         val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
         val deleteIconMargin = (itemHeight - intrinsicHeight) / 2

@@ -60,6 +60,7 @@ abstract class RecyclerViewCursorAdapter<ViewHolder : RecyclerView.ViewHolder> :
             do {
                 if (position == null) position = 0 else position++
 
+
                 val id = Integer.parseInt(cursor!!.getString(0)).toLong()
                 if (id == city.id){
                     find = true

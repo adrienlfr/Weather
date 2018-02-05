@@ -22,14 +22,16 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
     private lateinit var cityFragment: CityFragment
     private lateinit var database: CityQuery
+
     private var weatherFragment: WeatherFragment? = null
     private var notificationManager: NotificationManager? = null
+
+    var isTwoPane: Boolean = false
 
     companion object {
         var currentUriCity: Uri? = null
         var currentPositionCity: Int? = null
     }
-    var isTwoPane: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +50,8 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
         database = CityQuery(this)
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        createNotificationChannel("com.meteo.iut.meteo", "Notification Météo",
-                "Une notification est envoyé lorsque l'utilisateur appuie sur le bouton \"Nouvelle notification\". La notification correspond à la derniére ville visité, l'utilisateur peut ouvir l'application à partir de la notification.")
+        createNotificationChannel("com.meteo.iut.meteo", getString(R.string.weather_notification),
+                getString(R.string.notification_description))
     }
 
 
@@ -105,11 +107,11 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
                 val icon = Icon.createWithResource(this, android.R.drawable.ic_dialog_info)
 
-                val action = Notification.Action.Builder(icon, "Open", pendingIntent).build()
+                val action = Notification.Action.Builder(icon, getString(R.string.open), pendingIntent).build()
 
                 val notification = Notification.Builder(this@CityActivity, channelId)
-                        .setContentTitle("Météo")
-                        .setContentText("Derniere ville visité : ${city!!.name}")
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText(getString(R.string.notification_text, city!!.name))
                         .setSmallIcon(android.R.drawable.ic_dialog_info)
                         .setChannelId(channelId)
                         .setContentIntent(pendingIntent)

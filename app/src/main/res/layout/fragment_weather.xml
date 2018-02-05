@@ -20,8 +20,8 @@
             app:layout_constraintTop_toTopOf="parent"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
             android:layout_marginTop="10dp"
             android:textColor="@android:color/primary_text_light"
             tools:text="Clermont-Ferrand"/>
@@ -31,7 +31,8 @@
             android:layout_width="100dp"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
-            app:layout_constraintLeft_toLeftOf="@id/city"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/city"
             app:layout_constraintDimensionRatio="1.1"
             tools:src="@mipmap/ic_launcher" />
@@ -40,11 +41,9 @@
             android:id="@+id/weather_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
-            app:layout_constraintLeft_toRightOf="@id/weather_icon"
-            app:layout_constraintTop_toTopOf="@id/weather_icon"
-            app:layout_constraintBottom_toBottomOf="@id/weather_icon"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/weather_icon"
             android:textSize="30dp"
             android:textColor="@android:color/secondary_text_light"
             tools:text="Soleil" />
@@ -61,12 +60,11 @@
             android:id="@+id/temperature_label"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="@id/weather_icon"
             app:layout_constraintTop_toTopOf="@id/back_info"
             app:layout_constraintBottom_toTopOf="@id/humidity_label"
             app:layout_constraintVertical_chainStyle="spread"
             style="@style/weatherLabel"
-            android:text="TEMPÉRATURE:" />
+            android:text="@string/temperature" />
 
         <TextView
             android:id="@+id/temperature"
@@ -87,7 +85,7 @@
             app:layout_constraintRight_toRightOf="@id/temperature_label"
             app:layout_constraintTop_toBottomOf="@id/temperature_label"
             app:layout_constraintBottom_toTopOf="@id/pressure_label"
-            android:text="HUMIDITÉ:"/>
+            android:text="@string/humidity"/>
 
         <TextView
             android:id="@+id/humidity"
@@ -108,7 +106,7 @@
             app:layout_constraintRight_toRightOf="@id/temperature_label"
             app:layout_constraintTop_toBottomOf="@id/humidity_label"
             app:layout_constraintBottom_toBottomOf="@id/back_info"
-            android:text="PRESSION:"/>
+            android:text="@string/pressure"/>
 
         <TextView
             android:id="@+id/pressure"

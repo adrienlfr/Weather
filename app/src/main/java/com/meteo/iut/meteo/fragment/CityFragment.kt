@@ -1,12 +1,6 @@
 package com.meteo.iut.meteo.fragment
 
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.NotificationChannel
-import android.content.Context
-import android.content.Intent
 import android.database.Cursor
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -19,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
+import android.widget.Toast
 
 import com.meteo.iut.meteo.App
 import com.meteo.iut.meteo.R
@@ -29,7 +24,6 @@ import com.meteo.iut.meteo.database.CityContract.CityEntry
 import com.meteo.iut.meteo.database.CityCursorWrapper
 import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.dialog.CreateCityDialogFragment
-import com.meteo.iut.meteo.dialog.DeleteCityDialogFragment
 import com.meteo.iut.meteo.utils.SwipeToDeleteCallback
 import com.meteo.iut.meteo.utils.toast
 
@@ -73,7 +67,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
         val swipeHandler = object : SwipeToDeleteCallback(this.context) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val cursor = recyclerViewAdapter.getItem(viewHolder.adapterPosition)
-                cursor.let {showDeleteCityDialog(cursor!!)}
+                cursor.let {onCityDeleted(cursor!!)}
             }
         }
 
@@ -137,7 +131,10 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     }
 
     override fun onCityDeleted(cursor: Cursor) {
-        showDeleteCityDialog(cursor)
+        val values = CityCursorWrapper(cursor).getCityContentValues()
+        val cityName = values.getAsString(CityEntry.CITY_KEY_NAME)
+
+        deleteCity(cityName)
     }
 
     private fun selectFirstCity(){
@@ -150,32 +147,20 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
 
     private fun showCreateCityDialog() {
         val createCityFragment = CreateCityDialogFragment()
-        createCityFragment.listener = object : CreateCityDialogFragment.CreateCityDialogListerner {
+        createCityFragment.listener = object : CreateCityDialogFragment.CreateCityDialogListener {
             override fun onDialogPositiveClick(cityName: String) {
-                saveCity(cityName)
+                if (cityName.isNotEmpty()){
+                    saveCity(cityName.capitalize())
+                } else {
+                    context.toast(getString(R.string.city_name_empty), Toast.LENGTH_LONG)
+                    showCreateCityDialog()
+                }
             }
 
             override fun onDialogNegativeClick() { }
         }
 
         createCityFragment.show(fragmentManager, "CreateCityDialogFragment")
-    }
-
-    private fun showDeleteCityDialog(cursor: Cursor) {
-        val values = CityCursorWrapper(cursor).getCityContentValues()
-        val cityName = values.getAsString(CityEntry.CITY_KEY_NAME)
-
-        val deleteCityFragment = DeleteCityDialogFragment.newInstance(cityName)
-        deleteCityFragment.listener = object: DeleteCityDialogFragment.DeleteCityDialogListener {
-            override fun onDialogPositiveClick() {
-                deleteCity(cityName)
-            }
-
-            override fun onDialogNegativeClick() {
-            }
-        }
-
-        deleteCityFragment.show(fragmentManager, "DeleteCityDialogFragment")
     }
 
     private fun deleteCity(cityName: String) {

@@ -4,7 +4,6 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import com.meteo.iut.meteo.data.City
 
@@ -60,12 +59,5 @@ class CityQuery(context: Context) {
             cursor.close()
         }
         return city
-    }
-    fun getCityPosition(uriCity: Uri): Int? {
-        val cursor = contentResolver.query(uriCity,null,null,null,null)
-        cursor.moveToPrevious()
-        val position = cursor?.position
-        cursor.close()
-        return position
     }
 }

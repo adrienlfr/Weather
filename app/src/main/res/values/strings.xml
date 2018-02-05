@@ -1,20 +1,27 @@
 <resources>
-    <string name="app_name">Meteo</string>
-    <string name="createcity_title">Nom de la ville?</string>
-    <string name="createcity_positive">Ajouter la ville</string>
-    <string name="createcity_negative">Annuler</string>
-    <string name="createcity_cityhint">Paris, Clermont-Ferrand...</string>
-    <string name="menu_create_city">Ajouter une ville</string>
-    <string name="createcity_impossible">Impossible de créer la ville</string>
-    <string name="deletecity_title">Voulez-vous vraiment supprimer %1$s?</string>
-    <string name="commun_yes">Oui</string>
-    <string name="commun_no">Non</string>
-    <string name="deletecity_found">%1$s a été supprimé</string>
-    <string name="deletecity_impossible">Impossible de supprimer %1$s</string>
-    <string name="failed_sync_data">Impossible de charger les données</string>
-    
+    <string name="app_name">Weather</string>
+    <string name="createcity_title">City name?</string>
+    <string name="createcity_positive">Add city</string>
+    <string name="createcity_negative">Cancel</string>
+    <string name="createcity_cityhint">Paris, Lyon...</string>
+    <string name="menu_create_city">Add city</string>
+    <string name="createcity_impossible">Adding the city failed.</string>
+    <string name="deletecity_title">You want to remove %1$s?</string>
+    <string name="commun_yes">Yes</string>
+    <string name="commun_no">No</string>
+    <string name="deletecity_found">%1$s has been removed.</string>
+    <string name="deletecity_impossible">Removal of %1$s failed.</string>
+    <string name="failed_sync_data">Unable to load data.</string>
+    <string name="city_name_empty">City name must be filled.</string>
     <string name="meteo_temperature_value">%1$d°C</string>
     <string name="meteo_humidity_value">%1$s</string>
     <string name="meteo_pressure_value">%1$s hPa</string>
-    <string name="action_new_notification">Nouvelle notification</string>
+    <string name="action_new_notification">New notification</string>
+    <string name="pressure">PRESSURE:</string>
+    <string name="humidity">HUMIDITY:</string>
+    <string name="temperature">TEMPERATURE:</string>
+    <string name="weather_notification">Weather notification</string>
+    <string name="notification_description">A notification is sent when the user presses the "New notification" button. The notification is the last visited city, the user can open the application from the notification.</string>
+    <string name="open">Open</string>
+    <string name="notification_text">Last city visited : %1$s</string>
 </resources>

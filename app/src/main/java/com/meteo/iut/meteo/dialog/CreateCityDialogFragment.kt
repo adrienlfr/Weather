@@ -11,12 +11,12 @@ import com.meteo.iut.meteo.R
 
 class CreateCityDialogFragment : DialogFragment() {
 
-    interface CreateCityDialogListerner{
+    interface CreateCityDialogListener{
         fun onDialogPositiveClick(cityName: String)
         fun onDialogNegativeClick()
     }
 
-    var listener: CreateCityDialogListerner? = null
+    var listener: CreateCityDialogListener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)
@@ -30,11 +30,11 @@ class CreateCityDialogFragment : DialogFragment() {
         builder.setTitle(getString(R.string.createcity_title))
                 .setView(input)
                 .setPositiveButton(getString(R.string.createcity_positive),
-                        DialogInterface.OnClickListener {_, _ ->
+                        {_, _ ->
                             listener?.onDialogPositiveClick(input.text.toString())
                         })
                 .setNegativeButton(getString(R.string.createcity_negative),
-                        DialogInterface.OnClickListener { dialog, _ ->
+                        { dialog, _ ->
                             dialog.cancel()
                             listener?.onDialogNegativeClick()
                         })

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Météo</string>
+    <string name="createcity_title">Nom de la ville?</string>
+    <string name="createcity_positive">Ajouter la ville</string>
+    <string name="createcity_negative">Annuler</string>
+    <string name="createcity_cityhint">Paris, Clermont-Ferrand...</string>
+    <string name="menu_create_city">Ajouter une ville</string>
+    <string name="createcity_impossible">Impossible de créer la ville.</string>
+    <string name="deletecity_title">Voulez-vous vraiment supprimer %1$s?</string>
+    <string name="commun_yes">Oui</string>
+    <string name="commun_no">Non</string>
+    <string name="deletecity_found">%1$s a été supprimé.</string>
+    <string name="deletecity_impossible">Impossible de supprimer %1$s.</string>
+    <string name="failed_sync_data">Impossible de charger les données.</string>
+    <string name="city_name_empty">Un nom de ville doit être renseigné.</string>
+    <string name="meteo_temperature_value">%1$d°C</string>
+    <string name="meteo_humidity_value">%1$s</string>
+    <string name="meteo_pressure_value">%1$s hPa</string>
+    <string name="action_new_notification">Nouvelle notification</string>
+    <string name="pressure">PRESSION:</string>
+    <string name="humidity">HUMIDITÉ:</string>
+    <string name="temperature">TEMPÉRATURE:</string>
+    <string name="weather_notification">Notification Météo</string>
+    <string name="notification_description">Une notification est envoyé lorsque l\'utilisateur appuie sur le bouton "Nouvelle notification". La notification correspond à la derniére ville visité, l'utilisateur peut ouvir l'application à partir de la notification.</string>
+    <string name="open">Ouvrir</string>
+    <string name="notification_text">Derniére ville visité : %1$s</string>
+</resources>

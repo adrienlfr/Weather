@@ -4,7 +4,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.meteo.iut.meteo.data.City
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 
 class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
