@@ -36,29 +36,6 @@ class CityProvider : ContentProvider() {
         return Uri.parse("${CityEntry.CITY_TABLE_NAME}/$id")
     }
 
-    fun moveItemFromTo(from: Int, to: Int){
-        val sqlDb = cityDbHelper.writableDatabase
-        var tab:Array<Unit>
-        tab = sqlDb.execSQL(" Select " +CityEntry.CITY_KEY_ID +" from "+CityEntry.CITY_TABLE_NAME+"where rows_index between"+from +" and "+to)
-        var compteur : Int=0
-        tab.forEach { row ->
-            if ( compteur==0 ) {
-                sqlDb.execSQL(" Update " + row +" from "+CityEntry.CITY_TABLE_NAME+"set rows_index ="+to)
-            }else if (compteur == tab.size){
-                sqlDb.execSQL(" Update " + row +" from "+CityEntry.CITY_TABLE_NAME+"set rows_index ="+from)
-            }
-            else {
-                if (from < to) {
-                    sqlDb.execSQL(" Update " + row +" from "+CityEntry.CITY_TABLE_NAME+"set rows_index+=1")
-                } else {
-                    sqlDb.execSQL(" Update " + row +" from "+CityEntry.CITY_TABLE_NAME+"set rows_index-=1")
-
-                }
-            }
-            compteur++
-        }
-
-    }
 
     override fun query(uri: Uri, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor? {
         val queryBuilder = SQLiteQueryBuilder()
