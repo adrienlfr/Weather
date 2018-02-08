@@ -2,6 +2,7 @@ package com.meteo.iut.meteo.adapter
 
 import android.content.ContentUris
 import android.content.ContentValues
+import android.content.Context
 import android.content.CursorLoader
 import android.database.Cursor
 import android.database.CursorWrapper
@@ -58,6 +59,7 @@ class CityRecyclerViewAdapter(
         val cityName = values.getAsString(CityEntry.CITY_KEY_NAME)
         database.updateCityIndex(cityName ,content);
     }
+
     fun moveItemFromTo(from: Int, to: Int){
 
         var compteur = from
@@ -69,7 +71,6 @@ class CityRecyclerViewAdapter(
                 values.put(CityEntry.CITY_ROW_INDEX, from)
             }else if (compteur == to){
                 values.put(CityEntry.CITY_ROW_INDEX, to)
-
             }
             else {
                 if (from < to) {
@@ -82,7 +83,7 @@ class CityRecyclerViewAdapter(
             cursor!!.moveToNext()
             compteur++
         }
-
+        notifyDataSetChanged();
 
         //(" Select " + CityContract.CityEntry.CITY_KEY_ID +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"where rows_index between"+from +" and "+to)
         //sqlDb.execSQL(" Update " + row +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"set rows_index ="+to)

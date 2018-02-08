@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteQueryBuilder
 import android.net.Uri
 import android.text.TextUtils
 import com.meteo.iut.meteo.database.CityContract.CityEntry
-import kotlinx.android.synthetic.main.fragment_city.view.*
 
 class CityProvider : ContentProvider() {
     private lateinit var cityDbHelper : CityDbHelper

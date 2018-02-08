@@ -9,6 +9,7 @@ import com.meteo.iut.meteo.database.CityContract
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 import com.meteo.iut.meteo.database.CityCursorWrapper
 import com.meteo.iut.meteo.fragment.CityFragment
+import java.net.URI
 
 abstract class RecyclerViewCursorAdapter<ViewHolder : RecyclerView.ViewHolder> : RecyclerView.Adapter<ViewHolder>() {
 
@@ -18,6 +19,9 @@ abstract class RecyclerViewCursorAdapter<ViewHolder : RecyclerView.ViewHolder> :
     init {
         setHasStableIds(true)
     }
+
+
+
 
     fun swapCursor(newCursor: Cursor?): Cursor? {
         if (newCursor === cursor) {

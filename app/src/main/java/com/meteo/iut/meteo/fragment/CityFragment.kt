@@ -105,12 +105,13 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+        val sortOrder = CityContract.CityEntry.CITY_ROW_INDEX + " ASC"
         val projection = arrayOf(
                 CityEntry.CITY_KEY_ID,
                 CityEntry.CITY_KEY_NAME
         )
 
-        return CursorLoader(context, CityContract.CONTENT_URI, projection, null, null, null)
+        return CursorLoader(context, CityContract.CONTENT_URI, projection, null, null, sortOrder)
     }
 
 
