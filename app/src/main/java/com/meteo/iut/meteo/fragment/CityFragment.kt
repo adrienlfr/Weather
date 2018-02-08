@@ -3,6 +3,7 @@ package com.meteo.iut.meteo.fragment
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.NotificationChannel
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -183,7 +184,6 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
             override fun onDialogNegativeClick() {
             }
         }
-
         deleteCityFragment.show(fragmentManager, "DeleteCityDialogFragment")
     }
 
@@ -198,6 +198,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
             context.toast(getString(R.string.deletecity_impossible, cityName))
         }
     }
+
 
     private fun saveCity(cityName: String) {
         lastCityUriAdd = database.addCity(cityName)

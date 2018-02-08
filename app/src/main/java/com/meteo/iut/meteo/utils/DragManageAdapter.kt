@@ -16,7 +16,7 @@ class DragManageAdapter(adapter: CityRecyclerViewAdapter, context: Context, drag
 
     override fun onMove(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean
     {
-        theAdapter.swapItems(viewHolder.adapterPosition, target.adapterPosition)
+        theAdapter.moveItemFromTo(viewHolder.adapterPosition, target.adapterPosition)
         return true
     }
 

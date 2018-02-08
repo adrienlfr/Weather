@@ -1,23 +1,30 @@
 package com.meteo.iut.meteo.database
 
+import android.app.PendingIntent.getActivity
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.provider.ContactsContract
 import com.meteo.iut.meteo.data.City
+import android.database.sqlite.SQLiteDatabase
+
+
+
+
 
 class CityQuery(context: Context) {
     private val contentResolver: ContentResolver = context.contentResolver
 
-    fun addCity(cityName: String) : Uri{
+    fun addCity(cityName: String): Uri {
         val uri: Uri
         val projection = arrayOf(CityContract.CityEntry.CITY_KEY_ID, CityContract.CityEntry.CITY_KEY_NAME)
         val selection = "${CityContract.CityEntry.CITY_KEY_NAME} = \"$cityName\""
         val cityCursor = contentResolver.query(CityContract.CONTENT_URI, projection, selection, null, null)
 
-        uri = if(cityCursor.moveToFirst()) {
+        uri = if (cityCursor.moveToFirst()) {
             val cityValues = CityCursorWrapper(cityCursor).getCityContentValues()
             ContentUris.withAppendedId(CityContract.CONTENT_URI, cityValues.getAsLong(CityContract.CityEntry.CITY_KEY_ID))
         } else {
@@ -27,6 +34,20 @@ class CityQuery(context: Context) {
         }
 
         return uri
+    }
+
+    fun updateCityIndex(cityName:String, content:ContentValues): Boolean{
+        var result = false
+
+        val selection = "${CityContract.CityEntry.CITY_KEY_NAME} = \"$cityName\""
+
+        val rowsUpdated = contentResolver.update(CityContract.CONTENT_URI,content,
+                selection, null)
+
+        if (rowsUpdated > 0)
+            result = true
+
+        return result
     }
 
     fun deleteCity(cityName: String): Boolean {
@@ -56,38 +77,19 @@ class CityQuery(context: Context) {
             val id = Integer.parseInt(cursor.getString(0)).toLong()
             val cityName = cursor.getString(1)
 
-            city = City(id,cityName)
+            city = City(id, cityName)
             cursor.close()
         }
         return city
     }
+
     fun getCityPosition(uriCity: Uri): Int? {
-        val cursor = contentResolver.query(uriCity,null,null,null,null)
+        val cursor = contentResolver.query(uriCity, null, null, null, null)
         cursor.moveToPrevious()
         val position = cursor?.position
         cursor.close()
         return position
     }
-    fun moveItemFromTo(from: Int, to: Int){
-        val sqlDb = cityDbHelper.writableDatabase
-        var tab:Array<Unit>
-        tab = sqlDb.execSQL(" Select " + CityContract.CityEntry.CITY_KEY_ID +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"where rows_index between"+from +" and "+to)
-        var compteur : Int=0
-        tab.forEach { row ->
-            if ( compteur==0 ) {
-                sqlDb.execSQL(" Update " + row +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"set rows_index ="+to)
-            }else if (compteur == tab.size){
-                sqlDb.execSQL(" Update " + row +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"set rows_index ="+from)
-            }
-            else {
-                if (from < to) {
-                    sqlDb.execSQL(" Update " + row +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"set rows_index+=1")
-                } else {
-                    sqlDb.execSQL(" Update " + row +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"set rows_index-=1")
-                }
-            }
-            compteur++
-        }
 
-    }
+
 }

@@ -15,8 +15,6 @@ class CityCursorWrapper(cursor: Cursor) : CursorWrapper(cursor) {
         id = getColumnIndex(CityEntry.CITY_KEY_NAME)
         if(id != -1) values.put(CityEntry.CITY_KEY_NAME, getString(id))
 
-
-
         return values
     }
 }
