@@ -28,6 +28,7 @@ import com.meteo.iut.meteo.adapter.CityRecyclerViewAdapter
 import com.meteo.iut.meteo.database.CityContract
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 import com.meteo.iut.meteo.database.CityCursorWrapper
+import com.meteo.iut.meteo.database.CityProvider
 import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.dialog.CreateCityDialogFragment
 import com.meteo.iut.meteo.dialog.DeleteCityDialogFragment
@@ -105,13 +106,15 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        val sortOrder = CityContract.CityEntry.CITY_ROW_INDEX + " ASC"
+        //val sortOrder = CityContract.CityEntry.CITY_ROW_INDEX + " ASC"
+
         val projection = arrayOf(
                 CityEntry.CITY_KEY_ID,
-                CityEntry.CITY_KEY_NAME
-        )
+                CityEntry.CITY_KEY_NAME,
+                CityEntry.CITY_ROW_INDEX
 
-        return CursorLoader(context, CityContract.CONTENT_URI, projection, null, null, sortOrder)
+        )
+            return CursorLoader(context, CityContract.CONTENT_URI, projection, null, null, null)
     }
 
 

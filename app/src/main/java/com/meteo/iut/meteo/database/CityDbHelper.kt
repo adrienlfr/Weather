@@ -16,11 +16,12 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private val CITY_TABLE_CREATE = """
             CREATE TABLE ${CityEntry.CITY_TABLE_NAME} (
                 ${CityEntry.CITY_KEY_ID} INTEGER PRIMARY KEY,
-                ${CityEntry.CITY_KEY_NAME} TEXT
+                ${CityEntry.CITY_KEY_NAME} TEXT,
                 ${CityEntry.CITY_ROW_INDEX} INTEGER AUTOINCREMENT
 
             )
             """
+        //
 
         private val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${CityEntry.CITY_TABLE_NAME}"
     }

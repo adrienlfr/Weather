@@ -18,6 +18,8 @@ import com.meteo.iut.meteo.database.CityContract
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 import com.meteo.iut.meteo.database.CityCursorWrapper
 import com.meteo.iut.meteo.database.CityQuery
+import com.meteo.iut.meteo.App
+
 import java.net.URI
 
 
@@ -55,6 +57,7 @@ class CityRecyclerViewAdapter(
         }
     }
     private fun updateCity(cursor: Cursor, content: ContentValues){
+        database = App.database
         val values = CityCursorWrapper(cursor).getCityContentValues()
         val cityName = values.getAsString(CityEntry.CITY_KEY_NAME)
         database.updateCityIndex(cityName ,content);

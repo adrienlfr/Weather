@@ -20,9 +20,6 @@ abstract class RecyclerViewCursorAdapter<ViewHolder : RecyclerView.ViewHolder> :
         setHasStableIds(true)
     }
 
-
-
-
     fun swapCursor(newCursor: Cursor?): Cursor? {
         if (newCursor === cursor) {
             return null

@@ -29,7 +29,7 @@ class CityProvider : ContentProvider() {
         val id: Long
         when(uriType) {
             CITIES -> id = sqlDb.insert(CityEntry.CITY_TABLE_NAME, null, values)
-            else -> throw IllegalArgumentException("Unknown URI: " + uri)
+            else -> throw IllegalAccessError("Unknown URI: " + uri)
         }
         context.contentResolver.notifyChange(uri, null)
         return Uri.parse("${CityEntry.CITY_TABLE_NAME}/$id")
