@@ -72,7 +72,7 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         humidity = view.findViewById(R.id.humidity)
         pressure = view.findViewById(R.id.pressure)
 
-        refreshLayout.setOnRefreshListener { updateWeatherForCity(city.name) }
+        refreshLayout.setOnRefreshListener { refreshWeatherForCity() }
 
         return view
     }
@@ -82,7 +82,7 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         arguments?.let {
             if (!arguments.isEmpty) {
-                updateWeatherForCity(arguments.getParcelable<Uri>(Extra.EXTRA_CITY_URI))
+                updateWeatherForCity(arguments.getParcelable(Extra.EXTRA_CITY_URI))
             }
         }
     }
@@ -90,12 +90,8 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
         data?.let {
-            if(data.count > 0) {
-                data.moveToFirst()
-                val values = CityCursorWrapper(data).getCityContentValues()
-
-                updateWeatherForCity(values.getAsString(CityEntry.CITY_KEY_NAME))
-            }
+            if(data.moveToFirst())
+                refreshWeatherForCity()
         }
     }
 
@@ -116,23 +112,23 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     fun updateWeatherForCity(uriCity: Uri){
         this.uriCity = uriCity
         val cityTemp = database.getCity(uriCity)
-        cityTemp.let {
-            city = cityTemp!!
-            updateWeatherForCity(city!!.name)
+        cityTemp?.let {
+            city = cityTemp
+            this.cityName.text = city.name
+            updateUi(city.description, city.temperature, city.humidity, city.pressure, city.iconUrl)
+            refreshWeatherForCity()
         }
     }
 
-    private fun updateWeatherForCity(cityName: String) {
-        this.cityName.text = cityName
-
+    private fun refreshWeatherForCity() {
         if (!refreshLayout.isRefreshing){
             refreshLayout.isRefreshing = true
         }
 
-        val call = App.WEATHER_SERVICE.getWeather(cityName)
+        val call = App.WEATHER_SERVICE.getWeather(city.name)
         call.enqueue(object: Callback<Weather> {
             override fun onResponse(call: Call<Weather>?, response: Response<Weather>?) {
-                response?.body()?.currentObservation?.let { updateUi(it) }
+                response?.body()?.currentObservation?.let { updateObservation(it) }
                 refreshLayout.isRefreshing = false
             }
             override fun onFailure(call: Call<Weather>?, t: Throwable?) {
@@ -142,17 +138,26 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         })
     }
 
-    private fun updateUi(weatherCurrentObservation: CurrentObservation) {
-
+    private fun updateUi(description: String?, temperature: Float?, humidity: String?, pressure: String?, iconUrl: String?) {
         Picasso.with(context)
-                .load(weatherCurrentObservation.iconUrl)
+                .load(iconUrl)
                 .placeholder(R.drawable.ic_cloud_off_black_24dp)
                 .into(icon)
 
-        description.text = weatherCurrentObservation.weather
-        temperature.text = getString(R.string.meteo_temperature_value, weatherCurrentObservation.temperature.toInt())
-        humidity.text = getString(R.string.meteo_humidity_value, weatherCurrentObservation.humidity)
-        pressure.text = getString(R.string.meteo_pressure_value, weatherCurrentObservation.pressure)
+        description?.let { this.description.text = description }
+        temperature?.let { this.temperature.text = getString(R.string.meteo_temperature_value, temperature.toFloat()) }
+        humidity?.let { this.humidity.text = getString(R.string.meteo_humidity_value, humidity) }
+        pressure?.let { this.pressure.text = getString(R.string.meteo_pressure_value, pressure) }
+    }
+
+    private fun updateObservation(weatherCurrentObservation: CurrentObservation) {
+        updateUi(weatherCurrentObservation.weather, weatherCurrentObservation.temperature,
+                weatherCurrentObservation.humidity, weatherCurrentObservation.pressure,
+                weatherCurrentObservation.iconUrl)
+
+        database.updateObservationCity(uriCity, weatherCurrentObservation.weather, weatherCurrentObservation.temperature,
+                weatherCurrentObservation.humidity, weatherCurrentObservation.pressure,
+                weatherCurrentObservation.iconUrl)
     }
 
     fun initUi() {

@@ -15,6 +15,21 @@ class CityCursorWrapper(cursor: Cursor) : CursorWrapper(cursor) {
         id = getColumnIndex(CityEntry.CITY_KEY_NAME)
         if(id != -1) values.put(CityEntry.CITY_KEY_NAME, getString(id))
 
+        id = getColumnIndex(CityEntry.CITY_KEY_DESCRIPTION)
+        if(id != -1) values.put(CityEntry.CITY_KEY_DESCRIPTION, getString(id))
+
+        id = getColumnIndex(CityEntry.CITY_KEY_TEMPERATURE)
+        if(id != -1) values.put(CityEntry.CITY_KEY_TEMPERATURE, getString(id))
+
+        id = getColumnIndex(CityEntry.CITY_KEY_HUMIDITY)
+        if(id != -1) values.put(CityEntry.CITY_KEY_HUMIDITY, getString(id))
+
+        id = getColumnIndex(CityEntry.CITY_KEY_PRESSURE)
+        if(id != -1) values.put(CityEntry.CITY_KEY_PRESSURE, getString(id))
+
+        id = getColumnIndex(CityEntry.CITY_KEY_ICON_URL)
+        if(id != -1) values.put(CityEntry.CITY_KEY_ICON_URL, getString(id))
+
         return values
     }
 }
