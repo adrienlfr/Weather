@@ -28,7 +28,7 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
     private var weatherFragment: WeatherFragment? = null
     private var notificationManager: NotificationManagerCompat? = null
-    private var notifiationManagerAPI26: NotificationManager? = null
+    private var notificationManagerAPI26: NotificationManager? = null
 
     var isTwoPane: Boolean = false
 
@@ -122,7 +122,7 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
 
     private fun createNotificationChannel(id: String, name: String, description: String) {
         if (Build.VERSION.SDK_INT >= 26) {
-            notifiationManagerAPI26 = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManagerAPI26 = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             val importance = NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel(id, name, importance)
@@ -132,7 +132,7 @@ class CityActivity : AppCompatActivity(), CityFragment.CityFragmentListener {
             channel.lightColor = Color.RED
             channel.enableVibration(true)
             channel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
-            notifiationManagerAPI26?.createNotificationChannel(channel)
+            notificationManagerAPI26?.createNotificationChannel(channel)
         }
     }
 }
