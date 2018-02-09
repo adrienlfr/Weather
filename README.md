@@ -54,4 +54,5 @@ ouvrira l'application sur la ville en question.
 ## Contribution
 
 Le projet a été réalisé par [jeremyIgn](https://github.com/jeremyIgn) et [alefaure](https://github.com/alefaure).
+
 La répartition des taches c'est fait de façon équilibrer, 50% réaliser par chaqu'une des personnes.
