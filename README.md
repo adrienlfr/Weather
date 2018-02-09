@@ -8,7 +8,7 @@ Cette application permet de recevoir la météo de toutes les villes de France.
 
 ## Screenshots
 
-![](/images/1.png)
+![](/images/1.png =)
 ![](/images/2.png)
 ![](/images/3.png)
 ![](/images/4.png)
