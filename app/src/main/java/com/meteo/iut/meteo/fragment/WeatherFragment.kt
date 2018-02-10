@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.meteo.iut.meteo.App
@@ -25,6 +26,7 @@ import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.utils.Extra
 import com.meteo.iut.meteo.utils.toast
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_weather.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,7 +43,10 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             return fragment
         }
     }
-
+    private lateinit var emptyViewWeather: View
+    private lateinit var pressure_label: View
+    private lateinit var humidity_label: View
+    private lateinit var temperature_label: View
     private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var uriCity: Uri
     private lateinit var database: CityQuery
@@ -62,9 +67,25 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
+        //full_view_weather =  view.findViewById(R.id.full_view_weather)
+
+        emptyViewWeather =  view.findViewById(R.id.emptyViewWeather)
+        emptyViewWeather!!.setVisibility(View.VISIBLE)
+
+        temperature_label = view.findViewById(R.id.temperature_label)
+        temperature_label!!.setVisibility(View.GONE)
+
+        humidity_label = view.findViewById(R.id.humidity_label)
+        humidity_label!!.setVisibility(View.GONE)
+
+        temperature_label = view.findViewById(R.id.temperature_label)
+        temperature_label!!.setVisibility(View.GONE)
+
 
         refreshLayout = view.findViewById(R.id.swipe_refresh)
+
         cityName = view.findViewById(R.id.city)
         icon = view.findViewById(R.id.weather_icon)
         description = view.findViewById(R.id.weather_description)
@@ -108,7 +129,6 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                 CityEntry.CITY_KEY_ID,
                 CityEntry.CITY_KEY_NAME
         )
-
         return CursorLoader(context, CityContract.CONTENT_URI, projection, null, null, null)
     }
 
@@ -123,8 +143,17 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     private fun updateWeatherForCity(cityName: String) {
-        this.cityName.text = cityName
 
+        if(cityName!=""){
+            emptyViewWeather!!.setVisibility(View.GONE)
+
+            temperature_label!!.setVisibility(View.VISIBLE)
+
+            humidity_label!!.setVisibility(View.VISIBLE)
+
+            temperature_label!!.setVisibility(View.VISIBLE)
+        }
+        this.cityName.text = cityName
         if (!refreshLayout.isRefreshing){
             refreshLayout.isRefreshing = true
         }
