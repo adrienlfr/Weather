@@ -1,5 +1,7 @@
 package com.meteo.iut.meteo.fragment
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -30,6 +32,14 @@ import kotlinx.android.synthetic.main.fragment_weather.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.os.Build
+import android.support.annotation.RequiresApi
+import android.support.design.R.id.message
+import android.widget.Toast
 
 
 class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
@@ -69,20 +79,16 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
-        //full_view_weather =  view.findViewById(R.id.full_view_weather)
 
         emptyViewWeather =  view.findViewById(R.id.emptyViewWeather)
-        emptyViewWeather!!.setVisibility(View.VISIBLE)
-
         temperature_label = view.findViewById(R.id.temperature_label)
-        temperature_label!!.setVisibility(View.GONE)
-
         humidity_label = view.findViewById(R.id.humidity_label)
-        humidity_label!!.setVisibility(View.GONE)
-
         temperature_label = view.findViewById(R.id.temperature_label)
-        temperature_label!!.setVisibility(View.GONE)
 
+        emptyViewWeather!!.setVisibility(View.VISIBLE)
+        temperature_label!!.setVisibility(View.GONE)
+        humidity_label!!.setVisibility(View.GONE)
+        temperature_label!!.setVisibility(View.GONE)
 
         refreshLayout = view.findViewById(R.id.swipe_refresh)
 
@@ -122,6 +128,7 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     override fun onLoaderReset(loader: Loader<Cursor>?) {
         initUi()
+        checkNetwork()
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
@@ -142,9 +149,10 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         }
     }
 
-    private fun updateWeatherForCity(cityName: String) {
 
-        if(cityName!=""){
+    private fun checkIfCitySelected(name: String){
+        if(name!=""){
+
             emptyViewWeather!!.setVisibility(View.GONE)
 
             temperature_label!!.setVisibility(View.VISIBLE)
@@ -153,6 +161,24 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
             temperature_label!!.setVisibility(View.VISIBLE)
         }
+    }
+
+    /*fun printNetWorkStatus(){
+        if (!checkNetwork()){
+            "Network is not connected, you will have the latest value of weather from your last connection".toast(context)
+        }
+    }*/
+
+    fun Any.toast(context: Context) {
+        Toast.makeText(context, this.toString(), Toast.LENGTH_LONG).show()
+    }
+
+    private fun updateWeatherForCity(cityName: String) {
+
+        checkIfCitySelected(cityName)
+        //printNetWorkStatus()
+        checkNetwork()
+
         this.cityName.text = cityName
         if (!refreshLayout.isRefreshing){
             refreshLayout.isRefreshing = true
@@ -169,6 +195,15 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                 refreshLayout.isRefreshing = false
             }
         })
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun checkNetwork(){
+        val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var info = connMgr.activeNetworkInfo
+        if (info != null && info.isConnected()){
+            "Network is not connected, you will have the latest value of weather from your last connection".toast(context)
+        }
     }
 
     private fun updateUi(weatherCurrentObservation: CurrentObservation) {

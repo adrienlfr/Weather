@@ -9,7 +9,7 @@ import com.meteo.iut.meteo.database.CityContract.CityEntry
 class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        val DATABASE_VERSION = 2
+        val DATABASE_VERSION = 1
         val DATABASE_NAME = "weather.db"
 
         private val CITY_TABLE_CREATE = """
