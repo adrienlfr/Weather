@@ -1,5 +1,7 @@
 package com.meteo.iut.meteo.fragment
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -11,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.meteo.iut.meteo.App
@@ -25,9 +28,19 @@ import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.utils.Extra
 import com.meteo.iut.meteo.utils.toast
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_weather.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.os.Build
+import android.support.annotation.RequiresApi
+import android.support.design.R.id.message
+import android.support.v4.net.ConnectivityManagerCompat
+import android.widget.Toast
 
 
 class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
@@ -41,7 +54,10 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             return fragment
         }
     }
-
+    private lateinit var emptyViewWeather: View
+    private lateinit var pressure_label: View
+    private lateinit var humidity_label: View
+    private lateinit var temperature_label: View
     private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var uriCity: Uri
     private lateinit var database: CityQuery
@@ -62,9 +78,21 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
 
+        emptyViewWeather =  view.findViewById(R.id.emptyViewWeather)
+        temperature_label = view.findViewById(R.id.temperature_label)
+        humidity_label = view.findViewById(R.id.humidity_label)
+        temperature_label = view.findViewById(R.id.temperature_label)
+
+        emptyViewWeather.visibility = View.VISIBLE
+        temperature_label.visibility = View.GONE
+        humidity_label.visibility = View.GONE
+        temperature_label.visibility = View.GONE
+
         refreshLayout = view.findViewById(R.id.swipe_refresh)
+
         cityName = view.findViewById(R.id.city)
         icon = view.findViewById(R.id.weather_icon)
         description = view.findViewById(R.id.weather_description)
@@ -97,6 +125,7 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     override fun onLoaderReset(loader: Loader<Cursor>?) {
         initUi()
+        checkNetwork()
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
@@ -120,7 +149,21 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         }
     }
 
+    private fun checkIfCitySelected(name: String){
+        if(name!=""){
+            emptyViewWeather.visibility = View.GONE
+            temperature_label.visibility = View.VISIBLE
+            humidity_label.visibility = View.VISIBLE
+            temperature_label.visibility = View.VISIBLE
+        }
+    }
+
     private fun refreshWeatherForCity() {
+
+        checkIfCitySelected(city.name)
+        checkNetwork()
+
+        this.cityName.text = city.name
         if (!refreshLayout.isRefreshing){
             refreshLayout.isRefreshing = true
         }
@@ -138,7 +181,16 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         })
     }
 
+
+    private fun checkNetwork(){
+        val connMgr = activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val info = connMgr.activeNetworkInfo
+        if (info == null || !info.isConnected)
+            context.toast(getString(R.string.network))
+    }
+
     private fun updateUi(description: String?, temperature: Float?, humidity: String?, pressure: String?, iconUrl: String?) {
+
         Picasso.with(context)
                 .load(iconUrl)
                 .placeholder(R.drawable.ic_cloud_off_black_24dp)

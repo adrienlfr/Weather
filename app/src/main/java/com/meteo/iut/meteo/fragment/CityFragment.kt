@@ -36,6 +36,8 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
         fun onClickNewNotification()
     }
 
+    private var emptyView: View? = null
+
     var listener: CityFragmentListener? = null
     private val CITY_LOADER = 0
     private var displayCity = false
@@ -56,6 +58,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_city, container, false)
         recyclerView = view.findViewById(R.id.cities_recycler_view)
+        emptyView = view?.findViewById(R.id.empty_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         val glm = GridLayoutManager(recyclerView.context, 1)
@@ -63,6 +66,9 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
 
         recyclerViewAdapter = CityRecyclerViewAdapter(this)
         recyclerView.adapter = recyclerViewAdapter
+
+        checkShowEmptyView()
+
 
         val swipeHandler = object : SwipeToDeleteCallback(this.context) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -78,6 +84,15 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
         floatingButton.setOnClickListener({_ -> showCreateCityDialog()})
         return view
     }
+
+    private fun checkShowEmptyView() {
+        if (recyclerViewAdapter.itemCount > 0) {
+            emptyView!!.setVisibility(View.GONE)
+        } else {
+            emptyView!!.setVisibility(View.VISIBLE)
+        }
+    }
+
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,6 +111,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
         )
 
         return CursorLoader(context, CityContract.CONTENT_URI, projection, null, null, null)
+        checkShowEmptyView()
     }
 
     override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
@@ -104,6 +120,7 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
             displayCurrentCity()
             displayCity = false
         }
+        checkShowEmptyView()
     }
 
 
@@ -133,7 +150,6 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     override fun onCityDeleted(cursor: Cursor) {
         val values = CityCursorWrapper(cursor).getCityContentValues()
         val cityName = values.getAsString(CityEntry.CITY_KEY_NAME)
-
         deleteCity(cityName)
     }
 
@@ -176,13 +192,14 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
         }else{
             context.toast(getString(R.string.deletecity_impossible, cityName))
         }
+        checkShowEmptyView()
     }
 
     private fun saveCity(cityName: String) {
         lastCityUriAdd = database.addCity(cityName)
         displayCity = true
         loaderManager.restartLoader(CITY_LOADER, arguments, this)
-
+        checkShowEmptyView()
     }
 
     private fun displayCurrentCity() {
