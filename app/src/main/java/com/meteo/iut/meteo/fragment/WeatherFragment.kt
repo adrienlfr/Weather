@@ -145,7 +145,7 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                 .into(icon)
 
         description?.let { this.description.text = description }
-        temperature?.let { this.temperature.text = getString(R.string.meteo_temperature_value, temperature.toFloat()) }
+        temperature?.let { this.temperature.text = getString(R.string.meteo_temperature_value, temperature.toInt()) }
         humidity?.let { this.humidity.text = getString(R.string.meteo_humidity_value, humidity) }
         pressure?.let { this.pressure.text = getString(R.string.meteo_pressure_value, pressure) }
     }
