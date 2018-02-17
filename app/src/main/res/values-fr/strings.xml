@@ -22,7 +22,8 @@
     <string name="humidity">HUMIDITÉ:</string>
     <string name="temperature">TEMPÉRATURE:</string>
     <string name="weather_notification">Notification Météo</string>
-    <string name="notification_description">Une notification est envoyé lorsque l\'utilisateur appuie sur le bouton "Nouvelle notification". La notification correspond à la derniére ville visité, l'utilisateur peut ouvir l'application à partir de la notification.</string>
+    <string name="notification_description">Une notification est envoyé lorsque l\'utilisateur appuie sur le bouton "Nouvelle notification". La notification correspond à la derniére ville visité, l\'utilisateur peut ouvir l\'application à partir de la notification.</string>
     <string name="open">Ouvrir</string>
     <string name="notification_text">Derniére ville visité : %1$s</string>
+    <string name="network">Le réseau n\'est pas disponible, vous aurez les valeurs météo de la dernière connexion</string>
 </resources>

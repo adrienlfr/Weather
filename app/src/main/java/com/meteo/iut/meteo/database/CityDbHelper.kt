@@ -15,7 +15,12 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private val CITY_TABLE_CREATE = """
             CREATE TABLE ${CityEntry.CITY_TABLE_NAME} (
                 ${CityEntry.CITY_KEY_ID} INTEGER PRIMARY KEY,
-                ${CityEntry.CITY_KEY_NAME} TEXT
+                ${CityEntry.CITY_KEY_NAME} TEXT,
+                ${CityEntry.CITY_KEY_DESCRIPTION} TEXT,
+                ${CityEntry.CITY_KEY_TEMPERATURE} REAL,
+                ${CityEntry.CITY_KEY_HUMIDITY} TEXT,
+                ${CityEntry.CITY_KEY_PRESSURE} TEXT,
+                ${CityEntry.CITY_KEY_ICON_URL} TEXT
             )
             """
 
