@@ -1,6 +1,5 @@
 package com.meteo.iut.meteo.fragment
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
@@ -13,7 +12,6 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.meteo.iut.meteo.App
@@ -23,24 +21,14 @@ import com.meteo.iut.meteo.data.CurrentObservation
 import com.meteo.iut.meteo.data.Weather
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 import com.meteo.iut.meteo.database.CityContract
-import com.meteo.iut.meteo.database.CityCursorWrapper
 import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.utils.Extra
 import com.meteo.iut.meteo.utils.toast
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_weather.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import android.content.Context.CONNECTIVITY_SERVICE
-import android.content.Context.CONNECTIVITY_SERVICE
-import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.design.R.id.message
-import android.support.v4.net.ConnectivityManagerCompat
-import android.widget.Toast
 
 
 class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
