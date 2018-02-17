@@ -39,6 +39,7 @@ import android.content.Context.CONNECTIVITY_SERVICE
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.design.R.id.message
+import android.support.v4.net.ConnectivityManagerCompat
 import android.widget.Toast
 
 
@@ -143,40 +144,25 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     fun updateWeatherForCity(uriCity: Uri){
         this.uriCity = uriCity
         val cityTemp = database.getCity(uriCity)
-        cityTemp.let {
-            city = cityTemp!!
-            updateWeatherForCity(city!!.name)
+        cityTemp?.let {
+            city = cityTemp
+            updateWeatherForCity(city.name)
         }
     }
 
 
     private fun checkIfCitySelected(name: String){
         if(name!=""){
-
-            emptyViewWeather!!.setVisibility(View.GONE)
-
-            temperature_label!!.setVisibility(View.VISIBLE)
-
-            humidity_label!!.setVisibility(View.VISIBLE)
-
-            temperature_label!!.setVisibility(View.VISIBLE)
+            emptyViewWeather.visibility = View.GONE
+            temperature_label.visibility = View.VISIBLE
+            humidity_label.visibility = View.VISIBLE
+            temperature_label.visibility = View.VISIBLE
         }
-    }
-
-    /*fun printNetWorkStatus(){
-        if (!checkNetwork()){
-            "Network is not connected, you will have the latest value of weather from your last connection".toast(context)
-        }
-    }*/
-
-    fun Any.toast(context: Context) {
-        Toast.makeText(context, this.toString(), Toast.LENGTH_LONG).show()
     }
 
     private fun updateWeatherForCity(cityName: String) {
 
         checkIfCitySelected(cityName)
-        //printNetWorkStatus()
         checkNetwork()
 
         this.cityName.text = cityName
@@ -197,13 +183,11 @@ class WeatherFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         })
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun checkNetwork(){
-        val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        var info = connMgr.activeNetworkInfo
-        if (info != null && info.isConnected()){
-            "Network is not connected, you will have the latest value of weather from your last connection".toast(context)
-        }
+        val connMgr = activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val info = connMgr.activeNetworkInfo
+        if (info == null || !info.isConnected)
+            context.toast(getString(R.string.network))
     }
 
     private fun updateUi(weatherCurrentObservation: CurrentObservation) {

@@ -24,4 +24,5 @@
     <string name="notification_description">A notification is sent when the user presses the "New notification" button. The notification is the last visited city, the user can open the application from the notification.</string>
     <string name="open">Open</string>
     <string name="notification_text">Last city visited : %1$s</string>
+    <string name="network">Network is not connected, you will have the latest value of weather from your last connection</string>
 </resources>
