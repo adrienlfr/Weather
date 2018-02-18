@@ -93,8 +93,7 @@ class CityQuery(context: Context) {
     }
 
     fun getCity(uriCity: Uri): City? {
-        val projection = arrayOf(CityContract.CityEntry.CITY_KEY_ID, CityContract.CityEntry.CITY_KEY_NAME)
-
+        //val projection = arrayOf(CityContract.CityEntry.CITY_KEY_ID, CityContract.CityEntry.CITY_KEY_NAME)
 
         val cursor = contentResolver.query(uriCity,
                 projection, null, null, null)
