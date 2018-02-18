@@ -40,11 +40,13 @@ class WeatherActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
 
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+        var sortOrder = CityContract.CityEntry.CITY_ROW_INDEX + " ASC"
+
         val projection = arrayOf(
                 CityEntry.CITY_KEY_ID,
                 CityEntry.CITY_KEY_NAME
         )
-        return CursorLoader(this, CityContract.CONTENT_URI, projection, null, null, null)
+        return CursorLoader(this, CityContract.CONTENT_URI, projection, null, null, sortOrder)
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>?) {
