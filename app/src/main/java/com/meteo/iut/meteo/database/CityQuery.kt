@@ -1,10 +1,7 @@
 package com.meteo.iut.meteo.database
 
 import android.app.PendingIntent.getActivity
-import android.content.ContentResolver
-import android.content.ContentUris
-import android.content.ContentValues
-import android.content.Context
+import android.content.*
 import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
@@ -20,9 +17,11 @@ class CityQuery(context: Context) {
 
     fun addCity(cityName: String): Uri {
         val uri: Uri
-        val projection = arrayOf(CityContract.CityEntry.CITY_KEY_ID, CityContract.CityEntry.CITY_KEY_NAME)
+        val projection = arrayOf(CityContract.CityEntry.CITY_KEY_ID, CityContract.CityEntry.CITY_KEY_NAME , CityContract.CityEntry.CITY_ROW_INDEX)
         val selection = "${CityContract.CityEntry.CITY_KEY_NAME} = \"$cityName\""
         val cityCursor = contentResolver.query(CityContract.CONTENT_URI, projection, selection, null, null)
+        val citiesCursor = contentResolver.query(CityContract.CONTENT_URI, projection, null, null, null)
+
 
         uri = if (cityCursor.moveToFirst()) {
             val cityValues = CityCursorWrapper(cityCursor).getCityContentValues()
@@ -30,11 +29,15 @@ class CityQuery(context: Context) {
         } else {
             val values = ContentValues()
             values.put(CityContract.CityEntry.CITY_KEY_NAME, cityName)
+            values.put(CityContract.CityEntry.CITY_ROW_INDEX, (citiesCursor.count))
             Uri.parse("${CityContract.BASE_CONTENT_URI}/${contentResolver.insert(CityContract.CONTENT_URI, values)}")
         }
 
         return uri
     }
+
+
+
 
     fun updateCityIndex(cityName:String, content:ContentValues): Boolean{
         var result = false

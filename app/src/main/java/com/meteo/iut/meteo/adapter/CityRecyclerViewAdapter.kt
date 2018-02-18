@@ -58,66 +58,24 @@ class CityRecyclerViewAdapter(
     }
     private fun updateCity(cursor: Cursor, content: ContentValues){
         database = App.database
-        val values = CityCursorWrapper(cursor).getCityContentValues()
-        val cityName = values.getAsString(CityEntry.CITY_KEY_NAME)
-        database.updateCityIndex(cityName ,content);
+        var values = CityCursorWrapper(cursor).getCityContentValues()
+        var cityName = values.getAsString(CityEntry.CITY_KEY_NAME)
+        database.updateCityIndex(cityName ,content)
     }
 
     fun moveItemFromTo(from: Int, to: Int){
 
-        var compteur = from
         val values = ContentValues()
+        values.put(CityEntry.CITY_ROW_INDEX, to)
+        cursor!!.moveToPosition(from)
+        updateCity(cursor!!, values)
 
-        while(compteur<=to){
+        val values2 = ContentValues()
+        values2.put(CityEntry.CITY_ROW_INDEX, from)
+        cursor!!.moveToPosition(to)
+        updateCity(cursor!!, values2)
 
-            if ( compteur== from ) {
-                values.put(CityEntry.CITY_ROW_INDEX, from)
-            }else if (compteur == to){
-                values.put(CityEntry.CITY_ROW_INDEX, to)
-            }
-            else {
-                if (from < to) {
-                    values.put(CityEntry.CITY_ROW_INDEX, +1)
-                } else {
-                    values.put(CityEntry.CITY_ROW_INDEX, -1)
-                }
-            }
-            updateCity(cursor!!,values)
-            cursor!!.moveToNext()
-            compteur++
-        }
-        notifyDataSetChanged();
-
-        //(" Select " + CityContract.CityEntry.CITY_KEY_ID +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"where rows_index between"+from +" and "+to)
-        //sqlDb.execSQL(" Update " + row +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"set rows_index ="+to)
-        //sqlDb.execSQL(" Update " + row +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"set rows_index ="+from)
-        //sqlDb.execSQL(" Update " + row +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"set rows_index+=1")
-        //sqlDb.execSQL(" Update " + row +" from "+ CityContract.CityEntry.CITY_TABLE_NAME+"set rows_index-=1")
-
-        /*var tab = getAllCityBetween(from,to)
-        val firstCursor:Cursor
-        val lastCursor:Cursor
-
-
-        var compteur : Int=0
-        tab.forEach { row ->
-            val values = CityCursorWrapper(Cursor).getCityContentValues()
-            val cityName = values.getAsString(CityEntry.CITY_KEY_NAME)
-
-            if ( compteur==0 ) {
-                .updateCursorRowIndex(endCursor)
-            }else if (compteur == tab.size){
-                row.updateCursorRowIndex(startCursor)
-            }
-            else {
-                if (from < to) {
-                    row.incrementCursorRowIndex()
-                } else {
-                    row.decrementCursorRowIndex()
-                }
-            }
-            compteur++
-        }*/
+        notifyDataSetChanged()
 
     }
 
