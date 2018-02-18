@@ -35,7 +35,6 @@ class CityProvider : ContentProvider() {
         return Uri.parse("${CityEntry.CITY_TABLE_NAME}/$id")
     }
 
-
     override fun query(uri: Uri, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor? {
         val queryBuilder = SQLiteQueryBuilder()
         queryBuilder.tables = CityEntry.CITY_TABLE_NAME
