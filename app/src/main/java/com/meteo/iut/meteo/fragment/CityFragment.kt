@@ -31,7 +31,6 @@ import com.meteo.iut.meteo.database.CityCursorWrapper
 import com.meteo.iut.meteo.database.CityProvider
 import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.dialog.CreateCityDialogFragment
-import com.meteo.iut.meteo.dialog.DeleteCityDialogFragment
 import com.meteo.iut.meteo.utils.DragManageAdapter
 import com.meteo.iut.meteo.utils.SwipeToDeleteCallback
 import com.meteo.iut.meteo.utils.toast
