@@ -13,6 +13,7 @@ object CityContract {
     abstract class CityEntry : BaseColumns {
         companion object {
             val CITY_TABLE_NAME = PATH_CITIES
+            val CITY_ROW_INDEX = "row_index"
             val CITY_KEY_ID = BaseColumns._ID
             val CITY_KEY_NAME = "name"
             val CITY_KEY_DESCRIPTION = "description"

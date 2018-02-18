@@ -21,6 +21,8 @@ class CityDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
                 ${CityEntry.CITY_KEY_HUMIDITY} TEXT,
                 ${CityEntry.CITY_KEY_PRESSURE} TEXT,
                 ${CityEntry.CITY_KEY_ICON_URL} TEXT
+                ${CityEntry.CITY_KEY_NAME} TEXT,
+                ${CityEntry.CITY_ROW_INDEX} INTEGER
             )
             """
 

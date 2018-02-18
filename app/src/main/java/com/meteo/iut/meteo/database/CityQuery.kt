@@ -1,11 +1,20 @@
 package com.meteo.iut.meteo.database
 
+import android.app.PendingIntent.getActivity
+import android.content.*
+import android.database.Cursor
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
+import android.provider.ContactsContract
 import com.meteo.iut.meteo.data.City
+import android.database.sqlite.SQLiteDatabase
+
+
+
+
 
 class CityQuery(context: Context) {
     private val contentResolver: ContentResolver = context.contentResolver
@@ -17,18 +26,23 @@ class CityQuery(context: Context) {
             CityContract.CityEntry.CITY_KEY_TEMPERATURE,
             CityContract.CityEntry.CITY_KEY_HUMIDITY,
             CityContract.CityEntry.CITY_KEY_PRESSURE,
-            CityContract.CityEntry.CITY_KEY_ICON_URL)
+            CityContract.CityEntry.CITY_KEY_ICON_URL,
+            CityContract.CityEntry.CITY_ROW_INDEX)
 
     fun addCity(cityName: String) : Uri{
         val uri: Uri
         val selection = "${CityContract.CityEntry.CITY_KEY_NAME} = \"$cityName\""
         val cityCursor = contentResolver.query(CityContract.CONTENT_URI, projection, selection, null, null)
+        val citiesCursor = contentResolver.query(CityContract.CONTENT_URI, projection, null, null, null)
+
 
         uri = if(cityCursor.moveToFirst()) {
             val cityValues = CityCursorWrapper(cityCursor).getCityContentValues()
             ContentUris.withAppendedId(CityContract.CONTENT_URI, cityValues.getAsLong(CityContract.CityEntry.CITY_KEY_ID))
         } else {
-            val values = getCityContentValues(null, cityName, null, null, null, null, null)
+            val values = ContentValues()
+            values.put(CityContract.CityEntry.CITY_KEY_NAME, cityName)
+            values.put(CityContract.CityEntry.CITY_ROW_INDEX, (citiesCursor.count))
             Uri.parse("${CityContract.BASE_CONTENT_URI}/${contentResolver.insert(CityContract.CONTENT_URI, values)}")
         }
 
@@ -47,6 +61,23 @@ class CityQuery(context: Context) {
         return rowUpdate
     }
 
+
+
+
+    fun updateCityIndex(cityName:String, content:ContentValues): Boolean{
+        var result = false
+
+        val selection = "${CityContract.CityEntry.CITY_KEY_NAME} = \"$cityName\""
+
+        val rowsUpdated = contentResolver.update(CityContract.CONTENT_URI,content,
+                selection, null)
+
+        if (rowsUpdated > 0)
+            result = true
+
+        return result
+    }
+
     fun deleteCity(cityName: String): Boolean {
         var result = false
 
@@ -62,6 +93,8 @@ class CityQuery(context: Context) {
     }
 
     fun getCity(uriCity: Uri): City? {
+        val projection = arrayOf(CityContract.CityEntry.CITY_KEY_ID, CityContract.CityEntry.CITY_KEY_NAME)
+
 
         val cursor = contentResolver.query(uriCity,
                 projection, null, null, null)
@@ -97,5 +130,12 @@ class CityQuery(context: Context) {
         iconUrl?.let { values.put(CityContract.CityEntry.CITY_KEY_ICON_URL, iconUrl) }
 
         return values
+    }
+    fun getCityPosition(uriCity: Uri): Int? {
+        val cursor = contentResolver.query(uriCity, null, null, null, null)
+        cursor.moveToPrevious()
+        val position = cursor?.position
+        cursor.close()
+        return position
     }
 }

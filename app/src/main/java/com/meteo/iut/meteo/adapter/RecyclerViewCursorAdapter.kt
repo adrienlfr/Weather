@@ -1,9 +1,15 @@
 package com.meteo.iut.meteo.adapter
 
+import android.content.ContentValues
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import android.support.v7.widget.RecyclerView
 import com.meteo.iut.meteo.data.City
+import com.meteo.iut.meteo.database.CityContract
 import com.meteo.iut.meteo.database.CityContract.CityEntry
+import com.meteo.iut.meteo.database.CityCursorWrapper
+import com.meteo.iut.meteo.fragment.CityFragment
+import java.net.URI
 
 abstract class RecyclerViewCursorAdapter<ViewHolder : RecyclerView.ViewHolder> : RecyclerView.Adapter<ViewHolder>() {
 

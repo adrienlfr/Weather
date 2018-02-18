@@ -1,5 +1,11 @@
 package com.meteo.iut.meteo.fragment
 
+import android.app.Notification
+import android.app.NotificationManager
+import android.app.NotificationChannel
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -22,8 +28,11 @@ import com.meteo.iut.meteo.adapter.CityRecyclerViewAdapter
 import com.meteo.iut.meteo.database.CityContract
 import com.meteo.iut.meteo.database.CityContract.CityEntry
 import com.meteo.iut.meteo.database.CityCursorWrapper
+import com.meteo.iut.meteo.database.CityProvider
 import com.meteo.iut.meteo.database.CityQuery
 import com.meteo.iut.meteo.dialog.CreateCityDialogFragment
+import com.meteo.iut.meteo.dialog.DeleteCityDialogFragment
+import com.meteo.iut.meteo.utils.DragManageAdapter
 import com.meteo.iut.meteo.utils.SwipeToDeleteCallback
 import com.meteo.iut.meteo.utils.toast
 
@@ -97,6 +106,13 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loaderManager.initLoader(CITY_LOADER, null, this)
+
+        val dragAndDropHandler = DragManageAdapter(recyclerViewAdapter, this.context,
+                ItemTouchHelper.UP.or(ItemTouchHelper.DOWN), ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT))
+
+        val touchHelperDrag = ItemTouchHelper(dragAndDropHandler)
+        touchHelperDrag.attachToRecyclerView(recyclerView)
+
     }
 
 
@@ -105,12 +121,15 @@ class CityFragment : Fragment(), CityRecyclerViewAdapter.CityItemListener, Loade
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+       var sortOrder = CityContract.CityEntry.CITY_ROW_INDEX + " ASC"
+
         val projection = arrayOf(
                 CityEntry.CITY_KEY_ID,
-                CityEntry.CITY_KEY_NAME
+                CityEntry.CITY_KEY_NAME,
+                CityEntry.CITY_ROW_INDEX
         )
+            return CursorLoader(context, CityContract.CONTENT_URI, projection, null, null, sortOrder)
 
-        return CursorLoader(context, CityContract.CONTENT_URI, projection, null, null, null)
         checkShowEmptyView()
     }
 
